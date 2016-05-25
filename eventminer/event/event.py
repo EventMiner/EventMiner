@@ -72,6 +72,7 @@ class Event(object):
     def start_accuracy_extraction(self):
         """
         Starting function for the accuracy-report that compares a goldmaster corpus with the results of eventminer.
+        This is a test-comment.
         """
         # parse hypotheses from csv-file
         self.parsed_text = parser.convert_into_eventminer_format(self.text, tagger="pattern")
