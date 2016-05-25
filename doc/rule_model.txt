@@ -1,0 +1,14 @@
+
+EventMiner Rule-Model
+=====================
+In this document, the rule-model of EventMiner is described.
+
+Table of Contents
+
+1.
+2.
+3.
+
+======================
+
+1.

@@ -1,0 +1,45 @@
+DNA analysis from 16S rRNA sequences[6] has supported a hypothesis, originally suggested by Cleveland and colleagues
+in 1934, that these insects are most closely related to wood-eating cockroaches (genus Cryptocercus, the woodroach).
+This earlier conclusion had been based on the similarity of the symbiotic gut flagellates in the wood-eating cockroaches
+to those in certain species of termites regarded as living fossils.[7] In the 1960s additional evidence supporting that
+hypothesis emerged when F. A. McKittrick noted similar morphological characteristics between some termites and
+Cryptocercus nymphs.[8] These similarities have led some authors to propose that termites be reclassified as a single
+family, Termitidae, within the order Blattodea, which contains cockroaches.[9][10] Other researchers advocate the more
+conservative measure of retaining the termites as Termitoidae, an epifamily within the cockroach order, which preserves
+the classification of termites at family level and below.[11]
+
+The oldest unambiguous termite fossils date to the early Cretaceous, but given the diversity of Cretaceous termites and
+early fossil records showing mutualism between microorganisms and these insects, it is likely that they originated
+earlier in the Jurassic or Triassic.[12][13][14] Further evidence of a Jurassic origin is the assumption that the
+extinct Fruitafossor consumed termites, judging from its morphological similarity to modern termite-eating mammals.[15]
+The oldest termite nest discovered is believed to be from the Upper Cretaceous in west Texas, where the oldest known
+faecal pellets were also discovered.[16]
+
+Claims for an earlier time period for the emergence of termites stand on controversial footing. For example, F. M.
+Weesner indicated that Mastotermitidae termites may go back to the Late Permian, 251 million years ago,[17] and fossil
+wings that have a close resemblance to the wings of Mastotermes of the Mastotermitidae, the most primitive living
+termite, have been discovered in the Permian layers in Kansas.[18] It is even possible that the first termites emerged
+during the Carboniferous.[19] Termites are thought to be the descendants of the genus Cryptocercus.[9] The folded wings
+of the fossil wood roach Pycnoblattina, arranged in a convex pattern between segments 1a and 2a, resemble those seen in
+Mastotermes, the only living insect with the same pattern.[18] On the other hand, Krishna et al. consider that all of
+the Paleozoic and Triassic insects tentatively classified as termites are in fact unrelated to termites and should be
+excluded from the Isoptera.[20] Termites were the first social insects to evolve a caste system, evolving more than 100
+million years ago.[21]
+
+
+Evolutionary relationships of Blattodea, showing the placement of some termite families
+It has long been accepted that termites are closely related to cockroaches and mantids, and they are classified in the
+same superorder (Dictyoptera).[22][23] There is strong evidence suggesting that termites are highly specialised
+wood-eating cockroaches.[24] The cockroach genus Cryptocercus shares the strongest phylogenetical similarity with
+termites and is considered to be a sister-group to termites.[25][26] Termites and Cryptocercus share similar
+morphological and social features: for example, most cockroaches do not exhibit social characteristics, but
+Cryptocercus takes care of its young and exhibits other social behaviour such as trophallaxis and allogrooming.[27]
+The primitive giant northern termite (Mastotermes darwiniensis) exhibits numerous cockroach-like characteristics that
+are not shared with other termites, such as laying its eggs in rafts and having anal lobes on the wings.[28]
+Cryptocercidae and Isoptera are united in the clade Xylophagodea.[29] Although termites are sometimes called "white
+ants", they are actually not ants. Ants belong to the family Formicidae within the order Hymenoptera. The similarity of
+their social structure to that of termites is attributed to convergent evolution.[30]
+
+As of 2013, about 3,106 living and fossil termite species are recognised, classified in 12 families. The infraorder
+Isoptera is divided into the following clade and family groups, showing the subfamilies in their respective
+classification:[20]
