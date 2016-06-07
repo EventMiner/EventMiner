@@ -2,9 +2,11 @@
 This is a test-class that runs different commands.
 """
 import re
-import timex
+
 import ternip
 from ternip.formats.timex3 import Timex3XmlDocument
+
+from archive import timex
 from eventminer.event.event import Event
 from eventminer.event.event_preprocessing import remove_references
 
@@ -33,7 +35,7 @@ def test_remove_references():
 
 def test_start_extraction():
     e = Event()
-    e.read_file("test/test_articles/world_war_test.txt")
+    e.read_file("test/test_articles/marked_sentences.txt")
     e.start_extraction()
 
 
@@ -51,6 +53,6 @@ def test_ternip():
     print rec.tag(doc)
 
 
-test_ternip()
-# test_start_extraction()
+# test_ternip()
+test_start_extraction()
 

@@ -26,6 +26,7 @@ def extract_event(sentence, definitions, event_counter):
                  "end_date_year": ""}
 
     for i in range(0, len(sentence.words), 1):
+
         # Search for a yearly reference in a given range
         if sentence.words[i].string.isdigit() and sentence.words[i].string.isdigit() in definitions["year_range"]:
 
@@ -34,6 +35,7 @@ def extract_event(sentence, definitions, event_counter):
 
                 # Case: from year to year
                 if sentence.words[i+2].string.isdigit():
+                    resultset["rule_nr"] = 1
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["start_date_year"] = sentence.words[i].string
@@ -44,6 +46,7 @@ def extract_event(sentence, definitions, event_counter):
                 # Case: from month-year to month-year
                 if sentence.words[i-1].string.lower() in definitions["months"] \
                         and sentence.words[i+2].string.lower() in definitions["months"]:
+                    resultset["rule_nr"] = 2
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["start_date_month"] = definitions["months"][sentence.words[i-1].string.lower()]
@@ -55,6 +58,7 @@ def extract_event(sentence, definitions, event_counter):
 
             # RULE: Seasonal Reference (e.g. "early spring of 2013")
             if sentence.words[i-1].string == "of":
+                resultset["rule_nr"] = 3
                 resultset["event_found"] = True
                 resultset["event_nr"] = event_counter
                 resultset["start_date_year"] = sentence.words[i].string
@@ -63,12 +67,14 @@ def extract_event(sentence, definitions, event_counter):
 
             # RULE: Date surrounded by commas (e.g. "December, 2012,")
             if sentence.words[i-1].string == "," and sentence.words[i+1].string == ",":
+                resultset["rule_nr"] = 4
                 resultset["event_found"] = True
                 resultset["event_nr"] = event_counter
                 resultset["start_date_year"] = sentence.words[i].string
                 resultset["event"] = sentence.string
                 # check for mentioning of a month
                 if sentence.words[i-2].string.lower() in definitions["months"]:
+                    resultset["rule_nr"] = 5
                     resultset["start_date_month"] = definitions["months"][sentence.words[i-2].string.lower()]
                 return resultset
 
@@ -77,12 +83,14 @@ def extract_event(sentence, definitions, event_counter):
 
                 # Case: ended in year
                 if sentence.words[i-2].string == "ended":
+                    resultset["rule_nr"] = 6
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["end_date_year"] = sentence.words[i].string
                     resultset["event"] = sentence.string
                     return resultset
 
+                resultset["rule_nr"] = 7
                 resultset["event_found"] = True
                 resultset["event_nr"] = event_counter
                 resultset["start_date_year"] = sentence.words[i].string
@@ -94,6 +102,7 @@ def extract_event(sentence, definitions, event_counter):
 
                 # Check for mentioning of a day
                 if sentence.words[i-2].string.isdigit() and int(sentence.words[i-2].string) in definitions["day_range"]:
+                    resultset["rule_nr"] = 8
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["start_date_day"] = int(sentence.words[i-2].string)
@@ -104,6 +113,7 @@ def extract_event(sentence, definitions, event_counter):
 
                 # Case: ended in month-year
                 if sentence.words[i-3].string == "ended":
+                    resultset["rule_nr"] = 9
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["end_date_month"] = definitions["months"][sentence.words[i-1].string.lower()]
@@ -113,11 +123,15 @@ def extract_event(sentence, definitions, event_counter):
 
                 # If no day-number is present, just extract the month
                 else:
+                    print sentence.words[i].string
+                    print sentence.words[i-1].string
+                    resultset["rule_nr"] = 10
                     resultset["event_found"] = True
                     resultset["event_nr"] = event_counter
                     resultset["start_date_month"] = definitions["months"][sentence.words[i-1].string.lower()]
                     resultset["start_date_year"] = sentence.words[i].string
                     resultset["event"] = sentence.string
                     return resultset
+
 
     return resultset

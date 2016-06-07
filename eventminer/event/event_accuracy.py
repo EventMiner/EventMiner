@@ -62,8 +62,8 @@ class CsvAccuracy(object):
                     self.event_number.append(fieldvalue)
                 if fieldname == 'event_text':
                     self.event_text_goldmaster.append(fieldvalue)
-                if fieldname == 'rule_nr':
-                    self.rule_nr_goldmaster.append(fieldvalue)
+                # if fieldname == 'rule_nr':
+                #     self.rule_nr_goldmaster.append(fieldvalue)
                 if fieldname == 'location':
                     self.location_goldmaster.append(fieldvalue)
                 if fieldname == 'start_day':
@@ -89,7 +89,7 @@ class CsvAccuracy(object):
             e.read_text(event)
             result_set = e.start_accuracy_extraction()
             self.event_text_eventminer.append(result_set["event"].encode("utf-8"))
-            self.rule_nr_eventminer.append(result_set["rule_nr"])
+            #self.rule_nr_eventminer.append(result_set["rule_nr"])
             self.location_eventminer.append(result_set["location"])
             self.start_day_eventminer.append(result_set["start_date_day"])
             self.start_month_eventminer.append(str(result_set["start_date_month"]))
@@ -148,7 +148,7 @@ class CsvAccuracy(object):
             raise ValueError("Lists must have the same length.")
         num_correct = 0
         for x, y, z in zip(array_goldmaster, array_eventminer, array_event_number):
-            if x == y:
+            if str(x) == str(y):
                 num_correct += 1
             else:
                 print
@@ -173,7 +173,7 @@ class CsvAccuracy(object):
         print
         print "EventMiner Accuracy"
         print "  Event Accuracy:            ", str(round(self.event_accuracy() * 100, 2)), '%'
-        print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
+        #print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
         print "  Location Accuracy:         ", str(round(self.location_accuracy() * 100, 2)), '%'
         print "  Start Day Accuracy:        ", str(round(self.start_day_accuracy() * 100, 2)), '%'
         print "  Start Month Accuracy:      ", str(round(self.start_month_accuracy() * 100, 2)), '%'

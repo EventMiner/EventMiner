@@ -57,9 +57,12 @@ class Event(object):
                 resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
                 print "---------------"
                 print "Event_Nr:     " + str(resultset["event_nr"])
+                print "Rule_Nr:      " + str(resultset["rule_nr"])
                 print "Event:        " + resultset["event"]
+                print "Start Day:    " + str(resultset["start_date_day"])
                 print "Start Month:  " + str(resultset["start_date_month"])
                 print "Start Year:   " + str(resultset["start_date_year"])
+                print "End Day:      " + str(resultset["end_date_day"])
                 print "End Month:    " + str(resultset["end_date_month"])
                 print "End Year:     " + str(resultset["end_date_year"])
 
