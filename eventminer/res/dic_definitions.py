@@ -50,8 +50,8 @@ dic_definitions = {
                "november": "11",
                "december": "12"
                },
-    "year_range": range(0, 2500),
+    "year_range": range(32, 2300),
     "seasons": ["spring", "summer", "autumn", "winter"],
     "keywords_year": ["after", "before", "by", "in", "since"],
-    "keywords_time_span": ["and", "to", "until"]
+    "keywords_time_span": ["and", "to", "until", "-"]
 }

@@ -59,12 +59,12 @@ class Event(object):
                 print "Event_Nr:     " + str(resultset["event_nr"])
                 print "Rule_Nr:      " + str(resultset["rule_nr"])
                 print "Event:        " + resultset["event"]
-                print "Start Day:    " + str(resultset["start_date_day"])
-                print "Start Month:  " + str(resultset["start_date_month"])
-                print "Start Year:   " + str(resultset["start_date_year"])
-                print "End Day:      " + str(resultset["end_date_day"])
-                print "End Month:    " + str(resultset["end_date_month"])
-                print "End Year:     " + str(resultset["end_date_year"])
+                print "Start Day:    " + str(resultset["start_day"])
+                print "Start Month:  " + str(resultset["start_month"])
+                print "Start Year:   " + str(resultset["start_year"])
+                print "End Day:      " + str(resultset["end_day"])
+                print "End Month:    " + str(resultset["end_month"])
+                print "End Year:     " + str(resultset["end_year"])
 
                 event_counter += 1
                 # append result-dic to a list

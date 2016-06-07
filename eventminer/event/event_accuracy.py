@@ -91,12 +91,12 @@ class CsvAccuracy(object):
             self.event_text_eventminer.append(result_set["event"].encode("utf-8"))
             #self.rule_nr_eventminer.append(result_set["rule_nr"])
             self.location_eventminer.append(result_set["location"])
-            self.start_day_eventminer.append(result_set["start_date_day"])
-            self.start_month_eventminer.append(str(result_set["start_date_month"]))
-            self.start_year_eventminer.append(result_set["start_date_year"])
-            self.end_day_eventminer.append(str(result_set["end_date_day"]))
-            self.end_month_eventminer.append(result_set["end_date_month"])
-            self.end_year_eventminer.append(result_set["end_date_year"])
+            self.start_day_eventminer.append(result_set["start_day"])
+            self.start_month_eventminer.append(str(result_set["start_month"]))
+            self.start_year_eventminer.append(result_set["start_year"])
+            self.end_day_eventminer.append(str(result_set["end_day"]))
+            self.end_month_eventminer.append(result_set["end_month"])
+            self.end_year_eventminer.append(result_set["end_year"])
 
     def event_accuracy(self):
         return self.accuracy(self.event_text_goldmaster, self.event_text_eventminer,
