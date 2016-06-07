@@ -36,11 +36,14 @@ def extract_event(sentence, definitions, event_counter):
         # -------------------------------------------
         # 1.1 check for year-only
         if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"]:
-            # - assumption: a month always is referenced before a year, so when a year is found first, no
-            #   month was mentioned
-            time_index = i
-            set_standard_result_variables(sentence, event_counter, resultset)
-            resultset["start_year"] = sentence.words[i].string
+
+            # Exclusion of exceptions ("The 2014 FIFA World Cup took place in Brazil from 12 June 2014 to 26 June 2014")
+            if not sentence.words[i+1].tag in definitions["exclusion_tags"]:
+                # - assumption: a month always is referenced before a year, so when a year is found first, no
+                #   month was mentioned
+                time_index = i
+                set_standard_result_variables(sentence, event_counter, resultset)
+                resultset["start_year"] = sentence.words[i].string
 
         # 1.2 check for month-only or month and year
         if sentence.words[i].string.lower() in definitions["months"].keys():
@@ -113,39 +116,7 @@ def extract_event(sentence, definitions, event_counter):
             return resultset
 
 
-
-
-
-
-
-        #
-        # print sentence.words[i].string.lower()
-        # if month:
-        #     print "CHECK"
-        #     break
-
-
-        # resultset["event_found"] = True
-        # resultset["event_nr"] = event_counter
-        # resultset["event"] = sentence.string
-        # resultset["start_month"] = sentence.words[i].string
-
-
-
-
-
-
-
-
-
-            # Rule 1:   "From YMD till YMD"
-            # Example:  "from 8 February 1904 - 5 September 1905"
-            # if sentence.words[i-1].string.lower() in definitions["months"].keys() and \
-            #                 sentence.words[i-2].string in definitions["days"].values():
-            #     print "Check"
-
-
-
+        # OLD VERSION
         # # Search for a yearly reference in a given range
         # if sentence.words[i].string.isdigit() and sentence.words[i].string.isdigit() in definitions["year_range"]:
         #
@@ -253,7 +224,7 @@ def extract_event(sentence, definitions, event_counter):
         #             return resultset
 
 
-    return resultset
+    # return resultset
 
 
 def set_standard_result_variables(sentence, counter, resultset):
