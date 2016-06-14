@@ -56,5 +56,5 @@ dic_definitions = {
     "keywords_time_span": ["and", "to", "until", "-"],
     "exclusion_tags": ["NNP-ORG"],
     "rules": {"1": "Date: Year",
-              "2": "YMD-YM"}
+              "2": "Date: Year_Month"}
 }

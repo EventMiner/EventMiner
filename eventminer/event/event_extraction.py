@@ -61,6 +61,8 @@ def extract_event(sentence, definitions, event_counter):
                     set_standard_result_variables(sentence, event_counter, resultset)
                     resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
                     resultset["start_year"] = sentence.words[j].string
+                    resultset["rule_nr"] = 2
+                    resultset["rule_name"] = "Date: Year_Month"
                     break
                 # check for month-only
                 else:
@@ -77,9 +79,13 @@ def extract_event(sentence, definitions, event_counter):
                 #   e.g. "12 Feb 2015", "30th of Feb 2015"
                 if sentence.words[k].string in definitions["days"].values():
                     resultset["start_day"] = sentence.words[k].string
+                    resultset["rule_nr"] = 3
+                    resultset["rule_name"] = "Date: Year_Month_Day"
                 elif sentence.words[k].string in definitions["days"].keys():
                     # date-normalization: 8th -> 8
                     resultset["start_day"] = definitions["days"][sentence.words[k].string]
+                    resultset["rule_nr"] = 3
+                    resultset["rule_name"] = "Date: Year_Month_Day"
 
             # 2. Check for a timespan and extract second date
             # -----------------------------------------------

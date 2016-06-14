@@ -60,6 +60,8 @@ class CsvAccuracy(object):
             for (fieldname, fieldvalue) in items:
                 if fieldname == 'event_nr':
                     self.event_number.append(fieldvalue)
+                if fieldname == "rule_nr":
+                    self.rule_nr_goldmaster.append(fieldvalue)
                 if fieldname == 'event_text':
                     self.event_text_goldmaster.append(fieldvalue)
                 # if fieldname == 'rule_nr':
@@ -89,7 +91,7 @@ class CsvAccuracy(object):
             e.read_text(event)
             result_set = e.start_accuracy_extraction()
             self.event_text_eventminer.append(result_set["event"].encode("utf-8"))
-            #self.rule_nr_eventminer.append(result_set["rule_nr"])
+            self.rule_nr_eventminer.append(result_set["rule_nr"])
             self.location_eventminer.append(result_set["location"])
             self.start_day_eventminer.append(result_set["start_day"])
             self.start_month_eventminer.append(str(result_set["start_month"]))
@@ -173,7 +175,7 @@ class CsvAccuracy(object):
         print
         print "EventMiner Accuracy"
         print "  Event Accuracy:            ", str(round(self.event_accuracy() * 100, 2)), '%'
-        #print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
+        print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
         print "  Location Accuracy:         ", str(round(self.location_accuracy() * 100, 2)), '%'
         print "  Start Day Accuracy:        ", str(round(self.start_day_accuracy() * 100, 2)), '%'
         print "  Start Month Accuracy:      ", str(round(self.start_month_accuracy() * 100, 2)), '%'
