@@ -54,8 +54,11 @@ def extract_event(sentence, definitions, event_counter):
         # 1.2 check for month-only or month and year
         if sentence.words[i].string.lower() in definitions["months"].keys():
             # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
-            for j in range(i+1, i+3, 1):
+            for j in range(i+1, i+4, 1):
                 # check for month and year
+
+                print sentence.words[j].string
+
                 if sentence.words[j].string.isdigit() and int(sentence.words[j].string) in definitions["year_range"]:
                     time_index = j
                     set_standard_result_variables(sentence, event_counter, resultset)
@@ -64,19 +67,27 @@ def extract_event(sentence, definitions, event_counter):
                     resultset["rule_nr"] = 2
                     resultset["rule_name"] = "Date: Year_Month"
                     break
-                # check for month-only
-                else:
-                    time_index = i
-                    set_standard_result_variables(sentence, event_counter, resultset)
-                    resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
-                    break
+                # # check for month-only
+                # else:
+                #     time_index = i
+                #     set_standard_result_variables(sentence, event_counter, resultset)
+                #     resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+                #     break
+
+            # if no year is found, check for month-only
+            if not resultset["rule_nr"] == 2:
+                time_index = i
+                set_standard_result_variables(sentence, event_counter, resultset)
+                resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+
 
         if resultset["event_found"]:
 
             # 1.3 Check for a day
-            for k in range(time_index-1, time_index-4, -1):
+            for k in range(time_index+1, time_index-4, -1):
                 # - assumption: a day is always in the range of three positions before a month or a year,
                 #   e.g. "12 Feb 2015", "30th of Feb 2015"
+                # - or one position after a month, e.g. "August 29, 2012"
                 if sentence.words[k].string in definitions["days"].values():
                     resultset["start_day"] = sentence.words[k].string
                     resultset["rule_nr"] = 3
