@@ -55,6 +55,6 @@ dic_definitions = {
     "keywords_year": ["after", "before", "by", "in", "since"],
     "keywords_time_span": ["and", "to", "until", "-"],
     "exclusion_tags": ["NNP-ORG"],
-    "rules": {"1": "YMD-YMD",
+    "rules": {"1": "Date: Year",
               "2": "YMD-YM"}
 }

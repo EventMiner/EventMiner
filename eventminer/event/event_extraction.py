@@ -34,6 +34,7 @@ def extract_event(sentence, definitions, event_counter):
     for i in range(0, len(sentence.words), 1):
         # print event_counter
         # print sentence.words[i].string, sentence.words[i].tag
+        # print sentence.string
 
         # 1. Find whether a month or a year reference
         # -------------------------------------------
@@ -47,6 +48,8 @@ def extract_event(sentence, definitions, event_counter):
                 time_index = i
                 set_standard_result_variables(sentence, event_counter, resultset)
                 resultset["start_year"] = sentence.words[i].string
+                resultset["rule_nr"] = 1
+                resultset["rule_name"] = "Date: Year"
 
         # 1.2 check for month-only or month and year
         if sentence.words[i].string.lower() in definitions["months"].keys():

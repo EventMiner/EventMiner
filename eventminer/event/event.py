@@ -58,6 +58,7 @@ class Event(object):
                 print "---------------"
                 print "Event_Nr:     " + str(resultset["event_nr"])
                 print "Rule_Nr:      " + str(resultset["rule_nr"])
+                print "Rule_Name:    " + str(resultset["rule_name"])
                 print "Event:        " + resultset["event"]
                 print "Start Day:    " + str(resultset["start_day"])
                 print "Start Month:  " + str(resultset["start_month"])
@@ -65,10 +66,9 @@ class Event(object):
                 print "End Day:      " + str(resultset["end_day"])
                 print "End Month:    " + str(resultset["end_month"])
                 print "End Year:     " + str(resultset["end_year"])
-
-                event_counter += 1
                 # append result-dic to a list
                 self.event_list.append(event_extraction.extract_event(sentence, Event.definitions, event_counter))
+                event_counter += 1
 
         return self.event_list
 
