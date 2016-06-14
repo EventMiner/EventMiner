@@ -26,8 +26,8 @@ def remove_blanks(sentence_string):
     h = re.compile(' n\'t')
     i = re.compile('\[ ')
     j = re.compile(' \]')
-    k = re.compile('" ')
-    l = re.compile(' "')
+    # k = re.compile('" ')
+    # l = re.compile(' "')
 
     if a.search(sentence_string):
         sentence_string = a.sub(',', sentence_string)
@@ -49,9 +49,9 @@ def remove_blanks(sentence_string):
         sentence_string = i.sub(('['), sentence_string)
     if j.search(sentence_string):
         sentence_string = j.sub((']'), sentence_string)
-    if k.search(sentence_string):
-        sentence_string = k.sub(('"'), sentence_string)
-    if l.search(sentence_string):
-        sentence_string = l.sub(('" '), sentence_string)
+    # if k.search(sentence_string):
+    #     sentence_string = k.sub(('"'), sentence_string)
+    # if l.search(sentence_string):
+    #     sentence_string = l.sub(('" '), sentence_string)
 
     return sentence_string
