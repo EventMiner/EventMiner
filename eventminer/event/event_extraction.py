@@ -5,6 +5,7 @@ This class analyzes a sentence, detects and extract events.
    persons, names, etc.
 """
 
+import event_formatting
 
 # TODO: Maybe split funtion into smaller separated functions
 # extract_events calls then "extract_date()" and after that "extract_timespan()"
@@ -79,6 +80,8 @@ def extract_event(sentence, definitions, event_counter):
                 time_index = i
                 set_standard_result_variables(sentence, event_counter, resultset)
                 resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+                resultset["rule_nr"] = 4
+                resultset["rule_name"] = "Date: Month"
 
 
         if resultset["event_found"]:
@@ -95,7 +98,7 @@ def extract_event(sentence, definitions, event_counter):
                         resultset["rule_nr"] = 3
                         resultset["rule_name"] = "Date: Year_Month_Day"
                     else:
-                        resultset["rule_nr"] = 4
+                        resultset["rule_nr"] = 5
                         resultset["rule_name"] = "Date: Month_Day"
                 elif sentence.words[k].string in definitions["days"].keys():
                     # date-normalization: 8th -> 8
@@ -149,4 +152,4 @@ def extract_event(sentence, definitions, event_counter):
 def set_standard_result_variables(sentence, counter, resultset):
     resultset["event_found"] = True
     resultset["event_nr"] = counter
-    resultset["event"] = sentence.string
+    resultset["event"] = event_formatting.remove_blanks(sentence.string)
