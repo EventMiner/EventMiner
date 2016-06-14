@@ -18,6 +18,7 @@ class CsvAccuracy(object):
         self.events = []
         # 1. Event_text
         self.event_text_goldmaster = []
+        self.event_text_raw = []
         self.event_text_eventminer = []
         # 2. Rule_Nr
         self.rule_nr_goldmaster = []
@@ -62,10 +63,10 @@ class CsvAccuracy(object):
                     self.event_number.append(fieldvalue)
                 if fieldname == "rule_nr":
                     self.rule_nr_goldmaster.append(fieldvalue)
-                if fieldname == 'event_text':
+                if fieldname == 'event_text_raw':
+                    self.event_text_raw.append(fieldvalue)
+                if fieldname == 'event_text_processed':
                     self.event_text_goldmaster.append(fieldvalue)
-                # if fieldname == 'rule_nr':
-                #     self.rule_nr_goldmaster.append(fieldvalue)
                 if fieldname == 'location':
                     self.location_goldmaster.append(fieldvalue)
                 if fieldname == 'start_day':
@@ -86,7 +87,7 @@ class CsvAccuracy(object):
         Each event in the goldmaster-file is analyzed and extracted by eventminer.
         The results (extracted event, dates, etc.) will be compared with the initial data from the goldmaster-file.
         """
-        for event in self.event_text_goldmaster:
+        for event in self.event_text_raw:
             e = Event()
             e.read_text(event)
             result_set = e.start_accuracy_extraction()
@@ -171,7 +172,7 @@ class CsvAccuracy(object):
         print "RESULTS: "
         print "====================="
         print "Filename(s): " + self.filename
-        print "Total sentences: {}".format(len(self.event_text_goldmaster))
+        print "Total sentences: {}".format(len(self.event_text_raw))
         print
         print "EventMiner Accuracy"
         print "  Event Accuracy:            ", str(round(self.event_accuracy() * 100, 2)), '%'
