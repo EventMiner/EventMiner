@@ -19,5 +19,7 @@ def remove_references(text):
     # workaround can be developed
     cleaned_text = re.sub(str("\""), "", cleaned_text)
 
+    # replace "-" between years, because Pattern get confused otherwise...
+    cleaned_text = re.sub(r'(\d{2,4})(-)(\d{2,4})', r'\1 to \3', cleaned_text)
 
     return cleaned_text

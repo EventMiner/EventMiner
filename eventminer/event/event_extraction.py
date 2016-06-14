@@ -74,7 +74,6 @@ def extract_event(sentence, definitions, event_counter):
                         break
             except IndexError:
                 pass
-
             # if no year is found, check for month-only
             if not resultset["rule_nr"] == 2:
                 time_index = i
@@ -82,7 +81,6 @@ def extract_event(sentence, definitions, event_counter):
                 resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
                 resultset["rule_nr"] = 4
                 resultset["rule_name"] = "Date: Month"
-
 
         if resultset["event_found"]:
 
@@ -110,7 +108,7 @@ def extract_event(sentence, definitions, event_counter):
                         resultset["rule_nr"] = 4
                         resultset["rule_name"] = "Date: Month_Day"
 
-            # -------------------------------------------
+            # -----------------------------------------------
             # 2. Check for a timespan and extract second date
             # -----------------------------------------------
             if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
@@ -120,6 +118,8 @@ def extract_event(sentence, definitions, event_counter):
                     if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
                         time_index_2 = l
                         resultset["end_year"] = sentence.words[l].string
+                        resultset["rule_nr"] = 6
+                        resultset["rule_name"] = "Range: Year_to_Year"
                     # 2.2 check for month-only or month and year
                     if sentence.words[l].string.lower() in definitions["months"].keys():
                         # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")

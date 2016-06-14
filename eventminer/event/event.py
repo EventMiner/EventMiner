@@ -77,6 +77,7 @@ class Event(object):
         Starting function for the accuracy-report that compares a goldmaster corpus with the results of eventminer.
         This is a test-comment.
         """
+        self.text = event_preprocessing.remove_references(self.text)
         # parse hypotheses from csv-file
         self.parsed_text = parser.convert_into_eventminer_format(self.text, tagger="pattern")
         event_counter = 1

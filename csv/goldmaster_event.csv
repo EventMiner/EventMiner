@@ -46,3 +46,12 @@
 45;"In a May 6 statement, John Doe cited income inequality as the reason for his action, and said he leaked the documents simply because I understood enough about their contents to realise the scale of the injustices they described.";5;"Date: Month_Day";;6;5;;;;
 46;"By April 8, the government understood media reports were addressing tax evasion not attacking the country of Panama.";5;"Date: Month_Day";;8;4;;;;
 47;"As late as 17 April, Russian foreign minister Lavrov said that there were no spare armed forces in the territory of Crimea.";5;"Date: Month_Day";;17;4;;;;
+48;"From 1958 to 1961, a brief union with Egypt replaced Syria's parliamentary system with a highly centralized presidential regime.";6;"Range: Year_to_Year";;;;1958;;;1961
+49;"During the European migrant crisis of 2014-2015 hundreds of thousands of Syrian refugees of the Syrian Civil War entered Germany to seek refugee status.";6;"Range: Year_to_Year";;;;2014;;;2015
+50;"The country was under emergency rule from 1963 until 2011, banning public gatherings of more than five people.";6;"Range: Year_to_Year";;;;1963;;;2011
+51;"The regime survived a series of armed revolts by Sunni Islamists, mainly members of the Muslim Brotherhood, from 1976 until 1982.";6;"Range: Year_to_Year";;;;1976;;;1982
+52;"During 1944-1945, a deep famine struck northern Vietnam due to a combination of bad weather and French/Japanese exploitation (French Indochina had to supply grains to Japan).";6;"Range: Year_to_Year";;;;1944;;;1945
+53;"The Industrial Revolution was the transition to new manufacturing processes in the period from about 1760 to sometime between 1820 and 1840.";6;"Range: Year_to_Year";;;;1760;;;1840
+54;"About 40,000 communist soldiers infiltrated into the south from 1961-63.";6;"Range: Year_to_Year";;;;1961;;;63
+55;"The regime survived a series of armed revolts by Sunni Islamists, mainly members of the Muslim Brotherhood, from 1976 until 1982.";6;"Range: Year_to_Year";;;;1976;;;1982
+56;"AmazonFresh also operated pick-up locations in the suburbs of Bellevue and Kirkland from summer 2007 through early 2008.";6;"Range: Year_to_Year";;;;2007;;;2008

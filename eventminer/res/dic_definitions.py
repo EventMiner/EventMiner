@@ -53,7 +53,7 @@ dic_definitions = {
     "year_range": range(32, 2300),
     "seasons": ["spring", "summer", "autumn", "winter"],
     "keywords_year": ["after", "before", "by", "in", "since"],
-    "keywords_time_span": ["and", "to", "until", "-"],
+    "keywords_time_span": ["and", "to", "until", "-", "through"],
     "exclusion_tags": ["NNP-ORG"],
     "rules": {"1": "Date: Year",
               "2": "Date: Year_Month"}
