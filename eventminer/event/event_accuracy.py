@@ -153,7 +153,7 @@ class CsvAccuracy(object):
             else:
                 print
                 print "Error: "
-                print "  Event:       #" + str(int(z)+1)  # +1 the first line in csv are the row-descriptions
+                print "  Event:       #" + str(z)  # +1 the first line in csv are the row-descriptions
                 print "  Variable:    " + var_name
                 print "  Goldmaster:  " + "\"" + str(x) + "\""
                 print "  Eventminer:  " + "\"" + str(y) + "\""
