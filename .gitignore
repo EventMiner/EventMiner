@@ -89,3 +89,9 @@ ENV/
 .ropeproject
 
 .idea/
+bin
+include
+local
+man
+share
+pip-selfcheck.json
