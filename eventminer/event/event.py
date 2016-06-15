@@ -50,25 +50,29 @@ class Event(object):
         # 3. Analyze every sentence in text, if it contains an event
         event_counter = 1
         for sentence in self.parsed_text:
-            # check, if an event is extracted from the sentence
-            if event_extraction.extract_event(sentence, Event.definitions, event_counter)["event_found"]:
 
-                # for testing and more verbose information:
-                resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
-                print "---------------"
-                print "Event_Nr:     " + str(resultset["event_nr"])
-                print "Rule_Nr:      " + str(resultset["rule_nr"])
-                print "Rule_Name:    " + str(resultset["rule_name"])
-                print "Event:        " + resultset["event"]
-                print "Start Day:    " + str(resultset["start_day"])
-                print "Start Month:  " + str(resultset["start_month"])
-                print "Start Year:   " + str(resultset["start_year"])
-                print "End Day:      " + str(resultset["end_day"])
-                print "End Month:    " + str(resultset["end_month"])
-                print "End Year:     " + str(resultset["end_year"])
-                # append result-dic to a list
-                self.event_list.append(event_extraction.extract_event(sentence, Event.definitions, event_counter))
-                event_counter += 1
+            try:
+                # check, if an event is extracted from the sentence
+                if event_extraction.extract_event(sentence, Event.definitions, event_counter)["event_found"]:
+
+                    # for testing and more verbose information:
+                    resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
+                    print "---------------"
+                    print "Event_Nr:     " + str(resultset["event_nr"])
+                    print "Rule_Nr:      " + str(resultset["rule_nr"])
+                    print "Rule_Name:    " + str(resultset["rule_name"])
+                    print "Event:        " + resultset["event"]
+                    print "Start Day:    " + str(resultset["start_day"])
+                    print "Start Month:  " + str(resultset["start_month"])
+                    print "Start Year:   " + str(resultset["start_year"])
+                    print "End Day:      " + str(resultset["end_day"])
+                    print "End Month:    " + str(resultset["end_month"])
+                    print "End Year:     " + str(resultset["end_year"])
+                    # append result-dic to a list
+                    self.event_list.append(event_extraction.extract_event(sentence, Event.definitions, event_counter))
+                    event_counter += 1
+            except TypeError:
+                pass
 
         return self.event_list
 
