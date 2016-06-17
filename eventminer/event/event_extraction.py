@@ -7,6 +7,7 @@ This class analyzes a sentence, detects and extract events.
 
 import event_formatting
 
+
 # TODO: Maybe split funtion into smaller separated functions
 # extract_events calls then "extract_date()" and after that "extract_timespan()"
 def extract_event(sentence, definitions, event_counter):
