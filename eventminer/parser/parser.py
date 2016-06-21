@@ -3,8 +3,8 @@ This is a parser that converts the output of different taggers (like pattern, sp
 This enables switching between different parsers and corrects some mistakes of the taggers (e.g. Pattern adds
 blanks after symbols).
 """
-from sentence import Sentence
-from word import Word
+from eventminer.parser.sentence import Sentence
+from eventminer.parser.word import Word
 from eventminer.event.event_formatting import remove_blanks
 from pattern.en import parse, Text
 from spacy.en import English
@@ -55,7 +55,7 @@ def convert_spacy_format(text):
     # instantiate Spacy's parser
     parser = English()
     # parse text via Spacy's parser
-    doc = parser(unicode(text, "utf-8"))
+    doc = parser(text.decode('utf-8'))
     for sent in doc.sents:
         s = Sentence()
         s.string = str(sent)

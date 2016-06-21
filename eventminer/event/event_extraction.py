@@ -5,7 +5,7 @@ This class analyzes a sentence, detects and extract events.
    persons, names, etc.
 """
 
-import event_formatting
+from eventminer.event import event_formatting
 
 
 # TODO: Maybe split funtion into smaller separated functions
@@ -53,7 +53,7 @@ def extract_event(sentence, definitions, event_counter):
                 time_index = i
                 set_standard_result_variables(sentence, event_counter, resultset)
                 resultset["start_year"] = sentence.words[i].string
-                resultset["rule_nr"] = 1
+                resultset["rule_nr"] = "1"
                 resultset["rule_name"] = "Date: Year"
 
         # 1.2 check for month-only or month and year
@@ -70,17 +70,17 @@ def extract_event(sentence, definitions, event_counter):
                         set_standard_result_variables(sentence, event_counter, resultset)
                         resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
                         resultset["start_year"] = sentence.words[j].string
-                        resultset["rule_nr"] = 2
+                        resultset["rule_nr"] = "2"
                         resultset["rule_name"] = "Date: Year_Month"
                         break
             except IndexError:
                 pass
             # if no year is found, check for month-only
-            if not resultset["rule_nr"] == 2:
+            if not resultset["rule_nr"] == "2":
                 time_index = i
                 set_standard_result_variables(sentence, event_counter, resultset)
                 resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
-                resultset["rule_nr"] = 4
+                resultset["rule_nr"] = "4"
                 resultset["rule_name"] = "Date: Month"
 
         if resultset["event_found"]:
@@ -94,19 +94,19 @@ def extract_event(sentence, definitions, event_counter):
                     resultset["start_day"] = sentence.words[k].string
                     # check if year exists in order to set rules correctly
                     if resultset["start_year"]:
-                        resultset["rule_nr"] = 3
+                        resultset["rule_nr"] = "3"
                         resultset["rule_name"] = "Date: Year_Month_Day"
                     else:
-                        resultset["rule_nr"] = 5
+                        resultset["rule_nr"] = "5"
                         resultset["rule_name"] = "Date: Month_Day"
                 elif sentence.words[k].string in definitions["days"].keys():
                     # date-normalization: 8th -> 8
                     resultset["start_day"] = definitions["days"][sentence.words[k].string]
                     if resultset["start_year"]:
-                        resultset["rule_nr"] = 3
+                        resultset["rule_nr"] = "3"
                         resultset["rule_name"] = "Date: Year_Month_Day"
                     else:
-                        resultset["rule_nr"] = 4
+                        resultset["rule_nr"] = "4"
                         resultset["rule_name"] = "Date: Month_Day"
 
             # -----------------------------------------------
@@ -115,11 +115,11 @@ def extract_event(sentence, definitions, event_counter):
             if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
                 # use the logic of detecting months and years from above
                 for l in range(time_index+1, len(sentence.words), 1):
-                    # 2.1 check for year-only
+                    # RULE 6a: "Year to Year"
                     if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
                         time_index_2 = l
                         resultset["end_year"] = sentence.words[l].string
-                        resultset["rule_nr"] = 6
+                        resultset["rule_nr"] = "6a"
                         resultset["rule_name"] = "Range: Year_to_Year"
                     # 2.2 check for month-only or month and year
                     if sentence.words[l].string.lower() in definitions["months"].keys():

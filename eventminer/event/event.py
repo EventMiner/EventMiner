@@ -5,7 +5,7 @@ This class analyzes an article (e.g. from Wikipedia) and conducts the extraction
  3) each sentence is analyzed whether or not it contains an event
  4) if a sentence contains an event, it is written into a csv-file
 """
-import event_preprocessing
+from eventminer.event import event_preprocessing
 import eventminer.res.dic_definitions
 from eventminer.parser import parser
 from eventminer.event import event_extraction
@@ -57,17 +57,17 @@ class Event(object):
 
                     # for testing and more verbose information:
                     resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
-                    print "---------------"
-                    print "Event_Nr:     " + str(resultset["event_nr"])
-                    print "Rule_Nr:      " + str(resultset["rule_nr"])
-                    print "Rule_Name:    " + str(resultset["rule_name"])
-                    print "Event:        " + resultset["event"]
-                    print "Start Day:    " + str(resultset["start_day"])
-                    print "Start Month:  " + str(resultset["start_month"])
-                    print "Start Year:   " + str(resultset["start_year"])
-                    print "End Day:      " + str(resultset["end_day"])
-                    print "End Month:    " + str(resultset["end_month"])
-                    print "End Year:     " + str(resultset["end_year"])
+                    print("---------------")
+                    print("Event_Nr:     " + str(resultset["event_nr"]))
+                    print("Rule_Nr:      " + str(resultset["rule_nr"]))
+                    print("Rule_Name:    " + str(resultset["rule_name"]))
+                    print("Event:        " + resultset["event"])
+                    print("Start Day:    " + str(resultset["start_day"]))
+                    print("Start Month:  " + str(resultset["start_month"]))
+                    print("Start Year:   " + str(resultset["start_year"]))
+                    print("End Day:      " + str(resultset["end_day"]))
+                    print("End Month:    " + str(resultset["end_month"]))
+                    print("End Year:     " + str(resultset["end_year"]))
                     # append result-dic to a list
                     self.event_list.append(event_extraction.extract_event(sentence, Event.definitions, event_counter))
                     event_counter += 1

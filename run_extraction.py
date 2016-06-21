@@ -10,7 +10,7 @@ from eventminer.event.event_preprocessing import remove_references
 def test_read_from_file():
     e = Event()
     e.read_file("test/test_articles/random_test.txt")
-    print e.text
+    print(e.text)
 
 
 def test_remove_references():
@@ -18,9 +18,9 @@ def test_remove_references():
     e.read_file("test/test_articles/01_wikipedia_syrian_civil_war.txt")
     text = remove_references(e.text)
     if re.search(str('\[\d{1,3}]'), text):
-        print "CHECK"
+        print("CHECK")
     else:
-        print "NO"
+        print("NO")
 
 
 def test_start_extraction():
