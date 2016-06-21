@@ -59,18 +59,20 @@ def extract_event(sentence, definitions, event_counter):
             # Try-block to avoid running into an IndexError when we reach the end of a sentence.
             # e.g. "In total, seven current FIFA officials were arrested at the Hotel Baur au Lac in Zuerich on May 27."
             try:
-                # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
-                for j in range(i+1, i+4, 1):
-                    # check for month and year
-                    if sentence.words[j].string.isdigit() \
-                            and int(sentence.words[j].string) in definitions["year_range"]:
-                        time_index = j
-                        set_standard_result_variables(sentence, event_counter, resultset)
-                        resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
-                        resultset["start_year"] = sentence.words[j].string
-                        resultset["rule_nr"] = "2"
-                        resultset["rule_name"] = "Date: Year_Month"
-                        break
+                # Check for exception (e.g. "... from January TILL mid 1950")
+                if not sentence.words[i+1].string in definitions["keywords_time_span"]:
+                    # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
+                    for j in range(i+1, i+4, 1):
+                        # check for month and year
+                        if sentence.words[j].string.isdigit() \
+                                and int(sentence.words[j].string) in definitions["year_range"]:
+                            time_index = j
+                            set_standard_result_variables(sentence, event_counter, resultset)
+                            resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+                            resultset["start_year"] = sentence.words[j].string
+                            resultset["rule_nr"] = "2"
+                            resultset["rule_name"] = "Date: Month_Year"
+                            break
             except IndexError:
                 pass
             # if no year is found, check for month-only
@@ -93,19 +95,19 @@ def extract_event(sentence, definitions, event_counter):
                     # check if year exists in order to set rules correctly
                     if resultset["start_year"]:
                         resultset["rule_nr"] = "3"
-                        resultset["rule_name"] = "Date: Year_Month_Day"
+                        resultset["rule_name"] = "Date: Day_Month_Year"
                     else:
-                        resultset["rule_nr"] = "5"
-                        resultset["rule_name"] = "Date: Month_Day"
+                        resultset["rule_nr"] = "4a"
+                        resultset["rule_name"] = "Date: Day_Month"
                 elif sentence.words[k].string in definitions["days"].keys():
                     # date-normalization: 8th -> 8
                     resultset["start_day"] = definitions["days"][sentence.words[k].string]
                     if resultset["start_year"]:
                         resultset["rule_nr"] = "3"
-                        resultset["rule_name"] = "Date: Year_Month_Day"
+                        resultset["rule_name"] = "Date: Day_Month_Year"
                     else:
-                        resultset["rule_nr"] = "4"
-                        resultset["rule_name"] = "Date: Month_Day"
+                        resultset["rule_nr"] = "4a"
+                        resultset["rule_name"] = "Date: Day_Month"
 
             # -------------------------------------------------
             # 2. Check for a time-range and extract second date
@@ -127,8 +129,6 @@ def extract_event(sentence, definitions, event_counter):
                 return resultset
 
 
-
-
 def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2):
     """
     Method follows basically the logic of the method above.
@@ -142,15 +142,21 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
 
                 resultset["end_year"] = sentence.words[l].string
                 # Setting of rule_numbers (according to previously set rule-numbers
-                if resultset["rule_nr"] in ["3", "4", "5"]:
-                    resultset["rule_nr"] = "6c"
+
+                print resultset["rule_nr"]
+
+                if resultset["rule_nr"] == "4":
+                    resultset["rule_name"] = "Range: Month_to_Year"
+                    resultset["rule_nr"] = "6d"
+                if resultset["rule_nr"] in ["3", "5"]:
                     resultset["rule_name"] = "Range: Day_Month_Year_to_Year"
+                    resultset["rule_nr"] = "6c"
                 if resultset["rule_nr"] == "2":
-                    resultset["rule_nr"] = "6b"
                     resultset["rule_name"] = "Range: Month_Year_to_Year"
+                    resultset["rule_nr"] = "6b"
                 if resultset["rule_nr"] == "1":
-                    resultset["rule_nr"] = "6a"
                     resultset["rule_name"] = "Range: Year_to_Year"
+                    resultset["rule_nr"] = "6a"
                 # set index fur further iteration
                 time_index_2 = l
 
@@ -183,6 +189,7 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                         resultset["end_day"] = definitions["days"][sentence.words[n].string]
     except IndexError:
         pass
+
 
 def set_standard_result_variables(sentence, counter, resultset):
     resultset["event_found"] = True
