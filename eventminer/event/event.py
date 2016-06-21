@@ -50,13 +50,11 @@ class Event(object):
         # 3. Analyze every sentence in text, if it contains an event
         event_counter = 1
         for sentence in self.parsed_text:
-
             try:
+                resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
                 # check, if an event is extracted from the sentence
-                if event_extraction.extract_event(sentence, Event.definitions, event_counter)["event_found"]:
-
-                    # for testing and more verbose information:
-                    resultset = event_extraction.extract_event(sentence, Event.definitions, event_counter)
+                if resultset["event_found"]:
+                    # print variables for testing and more verbose information:
                     print("---------------")
                     print("Event_Nr:     " + str(resultset["event_nr"]))
                     print("Rule_Nr:      " + str(resultset["rule_nr"]))
