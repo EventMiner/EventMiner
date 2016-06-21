@@ -39,7 +39,9 @@ def extract_event(sentence, definitions, event_counter):
         # -------------------------------------------
         # 1. Find whether a month or a year reference
         # -------------------------------------------
-        # 1.1 check for year-only
+
+        # 1.1 Check for year-only
+        # -----------------------
         if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"]:
             # Exclusion of exceptions ("The 2014 FIFA World Cup took place in Brazil from 12 June 2014 to 26 June 2014")
             if not sentence.words[i+1].tag in definitions["exclusion_tags"]:
@@ -51,7 +53,8 @@ def extract_event(sentence, definitions, event_counter):
                 resultset["rule_nr"] = "1"
                 resultset["rule_name"] = "Date: Year"
 
-        # 1.2 check for month-only or month and year
+        # 1.2 Check for month-only or month and year
+        # ------------------------------------------
         if sentence.words[i].string.lower() in definitions["months"].keys():
             # Try-block to avoid running into an IndexError when we reach the end of a sentence.
             # e.g. "In total, seven current FIFA officials were arrested at the Hotel Baur au Lac in Zuerich on May 27."
@@ -78,8 +81,9 @@ def extract_event(sentence, definitions, event_counter):
                 resultset["rule_nr"] = "4"
                 resultset["rule_name"] = "Date: Month"
 
+        # 1.3 Check for a day
+        # -------------------
         if resultset["event_found"]:
-            # 1.3 Check for a day
             for k in range(time_index+1, time_index-4, -1):
                 # - assumption: a day is always in the range of three positions before a month or a year,
                 #   e.g. "12 Feb 2015", "30th of Feb 2015"
@@ -108,11 +112,13 @@ def extract_event(sentence, definitions, event_counter):
             # -------------------------------------------------
             
             # 2.1 Check for time-range directly after a keyword
+            # -------------------------------------------------
             if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
                 detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2)
                 return resultset
 
             # 2.2 Check for time-range when there was no keyword
+            # --------------------------------------------------
             else:
                 # if no keyword for a time-range was detected
                 # call a function that searches the sentence through the end
@@ -126,58 +132,57 @@ def extract_event(sentence, definitions, event_counter):
 def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2):
     """
     Method follows basically the logic of the method above.
-    After a keyword is found, the direct neighbourhood of the date is checked for another date.
+    After a keyword is found, the direct neighbourhood (index + 6) of the date is checked for another date.
     If a second date is found, the search is over.
     """
-    for l in range(time_index + 1, len(sentence.words), 1):
-        # -----------------------
-        # RULE 6a: "Year_to_Year"
-        # -----------------------
-        if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
-            # set index fur further iteration
-            time_index_2 = l
-            resultset["end_year"] = sentence.words[l].string
-            # -----------------------------
-            # RULE 6b: "Month_Year_to_Year"
-            # -----------------------------
-            # Check, if there's already a month saved in the resultset (rule2 = Year_Month) OR
-            #  if we've already been here and arrived at the second time, because another date was
-            #  found in the sentence
-            if resultset["rule_nr"] == "2" or resultset["rule_nr"] == "6b":
-                resultset["rule_nr"] = "6b"
-                resultset["rule_name"] = "Range: Month_Year_to_Year"
-            else:
-                resultset["rule_nr"] = "6a"
-                resultset["rule_name"] = "Range: Year_to_Year"
+    try:
+        for l in range(time_index + 1, time_index + 6, 1):
 
-        # 2.2 check for month-only or month and year
-        if sentence.words[l].string.lower() in definitions["months"].keys():
-            # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
+            if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
 
-            for m in range(l + 1, l + 3, 1):
-                # check for month and year
-                if sentence.words[m].string.isdigit() and int(sentence.words[m].string) in definitions["year_range"]:
-                    time_index_2 = m
-                    resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
-                    resultset["end_year"] = sentence.words[m].string
-                    break
-                # check for month-only
-                else:
-                    time_index_2 = l
-                    resultset["end_month"] = definitions["months"][sentence.words[i].string.lower()]
-                    break
+                resultset["end_year"] = sentence.words[l].string
+                # Setting of rule_numbers (according to previously set rule-numbers
+                if resultset["rule_nr"] in ["3", "4", "5"]:
+                    resultset["rule_nr"] = "6c"
+                    resultset["rule_name"] = "Range: Day_Month_Year_to_Year"
+                if resultset["rule_nr"] == "2":
+                    resultset["rule_nr"] = "6b"
+                    resultset["rule_name"] = "Range: Month_Year_to_Year"
+                if resultset["rule_nr"] == "1":
+                    resultset["rule_nr"] = "6a"
+                    resultset["rule_name"] = "Range: Year_to_Year"
+                # set index fur further iteration
+                time_index_2 = l
 
-        # 2.3 Check for a day
-        if time_index_2:
-            for n in range(time_index_2 - 1, time_index_2 - 4, -1):
-                # - assumption: a day is always in the range of three positions before a month or a year,
-                #   e.g. "12 Feb 2015", "30th of Feb 2015"
-                if sentence.words[n].string in definitions["days"].values():
-                    resultset["end_day"] = sentence.words[n].string
-                elif sentence.words[n].string in definitions["days"].keys():
-                    # date-normalization: 8th -> 8
-                    resultset["end_day"] = definitions["days"][sentence.words[n].string]
+            # 2.2 check for month-only or month and year
+            if sentence.words[l].string.lower() in definitions["months"].keys():
+                # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
 
+                for m in range(l + 1, l + 3, 1):
+                    # check for month and year
+                    if sentence.words[m].string.isdigit() and int(sentence.words[m].string) in definitions["year_range"]:
+                        time_index_2 = m
+                        resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
+                        resultset["end_year"] = sentence.words[m].string
+                        break
+                    # check for month-only
+                    else:
+                        time_index_2 = l
+                        resultset["end_month"] = definitions["months"][sentence.words[i].string.lower()]
+                        break
+
+            # 2.3 Check for a day
+            if time_index_2:
+                for n in range(time_index_2 - 1, time_index_2 - 4, -1):
+                    # - assumption: a day is always in the range of three positions before a month or a year,
+                    #   e.g. "12 Feb 2015", "30th of Feb 2015"
+                    if sentence.words[n].string in definitions["days"].values():
+                        resultset["end_day"] = sentence.words[n].string
+                    elif sentence.words[n].string in definitions["days"].keys():
+                        # date-normalization: 8th -> 8
+                        resultset["end_day"] = definitions["days"][sentence.words[n].string]
+    except IndexError:
+        pass
 
 def set_standard_result_variables(sentence, counter, resultset):
     resultset["event_found"] = True
