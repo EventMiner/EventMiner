@@ -96,3 +96,6 @@
 95;"Apart from common beliefes, the mentioned ritual lasted from january to August 1995.";"Apart from common beliefes, the mentioned ritual lasted from january to August 1995.";"7d";"Range: Month_to_Month_Year";;;1;;;8;1995
 96;"During the time of March - August 2016, the second term was done.";"During the time of March - August 2016, the second term was done.";"7d";"Range: Month_to_Month_Year";;;3;;;8;2016
 97;"Between February and June 2010, the statistics show no significant development.";"Between February and June 2010, the statistics show no significant development.";"7d";"Range: Month_to_Month_Year";;;2;;;6;2010
+98;"Two, three-hour classes will be held each week from November 29th until the end of January 2016.";"Two, three-hour classes will be held each week from November 29th until the end of January 2016.";"7e";"Range: Day_Month_to_Month_Year";;29;11;;;1;2016
+99;"From April 4th to the begin of June 2010 construction works have to be done.";"From April 4th to the begin of June 2010 construction works have to be done.";"7e";"Range: Day_Month_to_Month_Year";;4;4;;;6;2010
+100;"From May 3rd until mid of july 2014 the games will be hosted.";"From May 3rd until mid of july 2014 the games will be hosted.";"7e";"Range: Day_Month_to_Month_Year";;3;5;;;7;2014

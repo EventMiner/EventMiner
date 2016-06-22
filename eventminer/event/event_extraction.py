@@ -187,6 +187,10 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                         time_index_2 = m
 
                         print resultset["rule_nr"]
+
+                        if resultset["rule_nr"] == "4a":
+                            resultset["rule_name"] = "Range: Day_Month_to_Month_Year"
+                            resultset["rule_nr"] = "7e"
                         if resultset["rule_nr"] == "4":
                             resultset["rule_name"] = "Range: Month_to_Month_Year"
                             resultset["rule_nr"] = "7d"
