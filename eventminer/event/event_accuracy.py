@@ -185,3 +185,16 @@ class CsvAccuracy(object):
         print "  End Day Accuracy:          ", str(round(self.end_day_accuracy() * 100, 2)), '%'
         print "  End Month Accuracy:        ", str(round(self.end_month_accuracy() * 100, 2)), '%'
         print "  End Year Accuracy:         ", str(round(self.end_year_accuracy() * 100, 2)), '%'
+
+        result = {"Event Accuracy": (str(round(self.event_accuracy() * 100, 2))),
+                "Rule Accuracy" : (str(round(self.rule_accuracy() * 100, 2))),
+                "Location Accuracy": (str(round(self.location_accuracy() * 100, 2))),
+                "Start Day Accuracy": (str(round(self.start_day_accuracy() * 100, 2))),
+                "Start Month Accuracy": (str(round(self.start_month_accuracy() * 100, 2))),
+                "Start Year Accuracy": (str(round(self.start_year_accuracy() * 100, 2))),
+                "End Day Accuracy": (str(round(self.end_day_accuracy() * 100, 2))),
+                "End Month Accuracy": (str(round(self.end_month_accuracy() * 100, 2))),
+                "End Year Accuracy": (str(round(self.end_year_accuracy() * 100, 2)))
+                }
+
+        return result

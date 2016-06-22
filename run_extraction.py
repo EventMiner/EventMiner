@@ -26,6 +26,6 @@ def test_remove_references():
 def test_start_extraction():
     e = Event()
     e.read_file("test/test_articles/random_test.txt")
-    e.start_extraction()
+    return e.start_extraction()
 
 test_start_extraction()
