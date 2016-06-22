@@ -87,7 +87,7 @@ class CsvAccuracy(object):
         Each event in the goldmaster-file is analyzed and extracted by eventminer.
         The results (extracted event, dates, etc.) will be compared with the initial data from the goldmaster-file.
         """
-        # Spacy-tagger laden
+        # (load spacy tagger here for testing, if necessary)
         for event in self.event_text_raw:
             e = Event()
             e.read_text(event)

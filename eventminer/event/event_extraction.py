@@ -8,7 +8,7 @@ This class analyzes a sentence, detects and extract events.
 from eventminer.event import event_formatting
 
 
-# TODO: Maybe split funtion into smaller separated functions
+# TODO: Maybe split function into smaller separated functions
 # extract_events calls then "extract_date()" and after that "extract_time-range()"
 def extract_event(sentence, definitions, event_counter):
     """
@@ -119,14 +119,23 @@ def extract_event(sentence, definitions, event_counter):
                 detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2)
                 return resultset
 
+            try:
+                if sentence.words[time_index+2].string in definitions["keywords_time_span"]:
+                    # e.g. "from January 6th till mid 1950"
+                    time_index += 1
+                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2)
+                    return resultset
+            except IndexError:
+                pass
+
             # 2.2 Check for time-range when there was no keyword
             # --------------------------------------------------
-            else:
+            #else:
                 # if no keyword for a time-range was detected
                 # call a function that searches the sentence through the end
                 # for m in range(time_index+1, len(sentence.words), 1):
                 #     print sentence.words[m].string
-                return resultset
+            return resultset
 
 
 def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2):
@@ -138,13 +147,18 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
     try:
         for l in range(time_index + 1, time_index + 6, 1):
 
+            # 1. Check for only end_year
+            # --------------------------
             if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
 
                 resultset["end_year"] = sentence.words[l].string
-                # Setting of rule_numbers (according to previously set rule-numbers
+                # Setting of rule_numbers (according to previously set rule-numbers for a single date)
 
                 print resultset["rule_nr"]
 
+                if resultset["rule_nr"] == "4a":
+                    resultset["rule_name"] = "Range: Day_Month_to_Year"
+                    resultset["rule_nr"] = "6e"
                 if resultset["rule_nr"] == "4":
                     resultset["rule_name"] = "Range: Month_to_Year"
                     resultset["rule_nr"] = "6d"
@@ -160,7 +174,8 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 # set index fur further iteration
                 time_index_2 = l
 
-            # 2.2 check for month-only or month and year
+            # 2. Check for month-only or month and year
+            # -----------------------------------------
             if sentence.words[l].string.lower() in definitions["months"].keys():
                 # check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
 
@@ -177,9 +192,15 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                         resultset["end_month"] = definitions["months"][sentence.words[i].string.lower()]
                         break
 
-            # 2.3 Check for a day
+            # 3. Check for a day
+            # ------------------
             if time_index_2:
+
                 for n in range(time_index_2 - 1, time_index_2 - 4, -1):
+                    # Exception: "from January 6th till mid 1950"
+                    if sentence.words[n].string in definitions["keywords_time_span"]:
+                        break
+
                     # - assumption: a day is always in the range of three positions before a month or a year,
                     #   e.g. "12 Feb 2015", "30th of Feb 2015"
                     if sentence.words[n].string in definitions["days"].values():
