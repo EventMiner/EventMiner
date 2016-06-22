@@ -19,12 +19,6 @@ def extraction():
     result = run_extraction.test_start_extraction()
     return jsonify(extraction_result=result)
 
-@app.route('/')
-def index():
-    """Displays the index page accessible at '/'
-        """
-    return render_template('index.html')
-
 if __name__ == '__main__':
     app.debug=True
     app.run()
