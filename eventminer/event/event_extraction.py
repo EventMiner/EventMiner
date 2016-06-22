@@ -116,14 +116,14 @@ def extract_event(sentence, definitions, event_counter):
             # 2.1 Check for time-range directly after a keyword
             # -------------------------------------------------
             if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
-                detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2)
+                detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
                 return resultset
 
             try:
                 if sentence.words[time_index+2].string in definitions["keywords_time_span"]:
                     # e.g. "from January 6th till mid 1950"
                     time_index += 1
-                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2)
+                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
                     return resultset
             except IndexError:
                 pass
@@ -131,6 +131,7 @@ def extract_event(sentence, definitions, event_counter):
             # 2.2 Check for time-range when there was no keyword
             # --------------------------------------------------
             #else:
+            detect_time_range_without_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
                 # if no keyword for a time-range was detected
                 # call a function that searches the sentence through the end
                 # for m in range(time_index+1, len(sentence.words), 1):
@@ -138,7 +139,7 @@ def extract_event(sentence, definitions, event_counter):
             return resultset
 
 
-def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2):
+def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i):
     """
     Method follows basically the logic of the method above.
     After a keyword is found, the direct neighbourhood (index + 6) of the date is checked for another date.
@@ -154,7 +155,6 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 resultset["end_year"] = sentence.words[l].string
                 # Setting of rule_numbers (according to previously set rule-numbers for a single date)
 
-                print resultset["rule_nr"]
 
                 if resultset["rule_nr"] == "4a":
                     resultset["rule_name"] = "Range: Day_Month_to_Year"
@@ -182,11 +182,17 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 for m in range(l + 1, l + 3, 1):
                     # check for month and year
                     if sentence.words[m].string.isdigit() and int(sentence.words[m].string) in definitions["year_range"]:
-                        time_index_2 = m
-                        resultset["rule_nr"] = "7a"
-                        resultset["rule_name"] = "Range: Year_to_Month_Year"
                         resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
                         resultset["end_year"] = sentence.words[m].string
+                        time_index_2 = m
+
+                        if resultset["rule_nr"] == "2":
+                            resultset["rule_name"] = "Range: Month_Year_to_Month_Year"
+                            resultset["rule_nr"] = "7b"
+                        else:
+                            resultset["rule_nr"] = "7a"
+                            resultset["rule_name"] = "Range: Year_to_Month_Year"
+
                         break
                     # check for month-only
                     else:
@@ -213,6 +219,10 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
     except IndexError:
         pass
 
+
+def detect_time_range_without_keyword(definitions, resultset, sentence, time_index, time_index_2, i):
+
+    return resultset
 
 def set_standard_result_variables(sentence, counter, resultset):
     resultset["event_found"] = True
