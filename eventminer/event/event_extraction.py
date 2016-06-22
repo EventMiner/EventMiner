@@ -183,6 +183,8 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     # check for month and year
                     if sentence.words[m].string.isdigit() and int(sentence.words[m].string) in definitions["year_range"]:
                         time_index_2 = m
+                        resultset["rule_nr"] = "7a"
+                        resultset["rule_name"] = "Range: Year_to_Month_Year"
                         resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
                         resultset["end_year"] = sentence.words[m].string
                         break
