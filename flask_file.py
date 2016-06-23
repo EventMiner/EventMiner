@@ -18,17 +18,19 @@ def accuracy():
 @app.route('/extraction')
 def extraction():
     title = request.args.get('title', "", type=str)
-    #url = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + title
-    #url = "https://en.wikipedia.org/w/api.php?action=query&titles="+title+"&prop=revisions&rvprop=content&format=json"
     url = "https://en.wikipedia.org/w/api.php?action=query&titles="+title+"&prop=extracts&format=json"
     data = requests.get(url)
     array = data.json()
-    text_id = array['query']['pages'].keys()[0].encode('ascii','ignore')
-    wiki_text = array['query']['pages'][text_id]['extract']
-    wiki_text = strip_tags(wiki_text)
+    try:
+        text_id = array['query']['pages'].keys()[0].encode('ascii','ignore')
+        wiki_text = array['query']['pages'][text_id]['extract']
+        wiki_text = strip_tags(wiki_text)
 
-    result = run_extraction.flask_start_extraction(wiki_text)
-    return jsonify(extraction_result=result)
+        result = run_extraction.flask_start_extraction(wiki_text)
+        return jsonify(extraction_result=result)
+
+    except:
+        return jsonify(extraction_result=[])
 
 
 @app.route('/search')
