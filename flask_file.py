@@ -17,10 +17,10 @@ def accuracy():
 
 @app.route('/extraction')
 def extraction():
-    term = request.args.get('term', "", type=str)
-    #url = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + term
-    #url = "https://en.wikipedia.org/w/api.php?action=query&titles="+term+"&prop=revisions&rvprop=content&format=json"
-    url = "https://en.wikipedia.org/w/api.php?action=query&titles="+term+"&prop=extracts&format=json"
+    title = request.args.get('title', "", type=str)
+    #url = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + title
+    #url = "https://en.wikipedia.org/w/api.php?action=query&titles="+title+"&prop=revisions&rvprop=content&format=json"
+    url = "https://en.wikipedia.org/w/api.php?action=query&titles="+title+"&prop=extracts&format=json"
     data = requests.get(url)
     array = data.json()
     text_id = array['query']['pages'].keys()[0].encode('ascii','ignore')
@@ -29,6 +29,18 @@ def extraction():
 
     result = run_extraction.flask_start_extraction(wiki_text)
     return jsonify(extraction_result=result)
+
+
+@app.route('/search')
+def search():
+    term = request.args.get('term', "", type=str)
+    url = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" + term
+    data = requests.get(url)
+    array = data.json()
+
+    result = array[1]
+    return jsonify(search_result=result)
+
 
 class MLStripper(HTMLParser):
     def __init__(self):
