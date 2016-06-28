@@ -233,6 +233,9 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                         resultset["end_day"] = sentence.words[n].string
 
                         #print resultset["rule_nr"]
+                        if resultset["rule_nr"] == "7d":
+                            resultset["rule_nr"] = "8d"
+                            resultset["rule_name"] = "Range: Month_to_Day_Month_Year"
                         if resultset["rule_nr"] == "7c":
                             resultset["rule_nr"] = "8c"
                             resultset["rule_name"] = "Range: Day_Month_Year_to_Day_Month_Year"
@@ -245,6 +248,9 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     elif sentence.words[n].string in definitions["days"].keys():
                         # date-normalization: 8th -> 8
                         resultset["end_day"] = definitions["days"][sentence.words[n].string]
+                        if resultset["rule_nr"] == "7d":
+                            resultset["rule_nr"] = "8d"
+                            resultset["rule_name"] = "Range: Month_to_Day_Month_Year"
                         if resultset["rule_nr"] == "7c":
                             resultset["rule_nr"] = "8c"
                             resultset["rule_name"] = "Range: Day_Month_Year_to_Day_Month_Year"
