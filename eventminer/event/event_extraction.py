@@ -91,23 +91,69 @@ def extract_event(sentence, definitions, event_counter):
                 #   e.g. "12 Feb 2015", "30th of Feb 2015"
                 # - or one position after a month, e.g. "August 29, 2012"
                 if sentence.words[k].string in definitions["days"].values():
-                    resultset["start_day"] = sentence.words[k].string
-                    # check if year exists in order to set rules correctly
-                    if resultset["start_year"]:
-                        resultset["rule_nr"] = "3"
-                        resultset["rule_name"] = "Date: Day_Month_Year"
+
+                    # Exception: "between 25 and 29 January 1904"
+                    if sentence.words[k-2].string in definitions["days"].values():
+                        resultset["start_day"] = sentence.words[k-2].string
+                        time_index = k-2
+                        resultset["rule_nr"] = "5"
+                        resultset["rule_name"] = "Date: Day"
+                        resultset["start_month"] = ""
+                        resultset["start_year"] = ""
+                        break
                     else:
-                        resultset["rule_nr"] = "4a"
-                        resultset["rule_name"] = "Date: Day_Month"
+                        resultset["start_day"] = sentence.words[k].string
+                        if resultset["start_year"]:
+                            resultset["rule_nr"] = "3"
+                            resultset["rule_name"] = "Date: Day_Month_Year"
+                            break
+                        else:
+                            resultset["rule_nr"] = "4a"
+                            resultset["rule_name"] = "Date: Day_Month"
+                            break
+
                 elif sentence.words[k].string in definitions["days"].keys():
-                    # date-normalization: 8th -> 8
-                    resultset["start_day"] = definitions["days"][sentence.words[k].string]
-                    if resultset["start_year"]:
-                        resultset["rule_nr"] = "3"
-                        resultset["rule_name"] = "Date: Day_Month_Year"
+                    # Exception: "between 25 and 29 January 1904"
+                    if sentence.words[k-2].string in definitions["days"].values():
+                        resultset["start_day"] = sentence.words[k-2].string
+                        time_index = k-2
+                        resultset["rule_nr"] = "5"
+                        resultset["rule_name"] = "Date: Day"
+                        resultset["start_month"] = ""
+                        resultset["start_year"] = ""
+                        break
                     else:
-                        resultset["rule_nr"] = "4a"
-                        resultset["rule_name"] = "Date: Day_Month"
+                        # date-normalization: 8th -> 8
+                        resultset["start_day"] = definitions["days"][sentence.words[k].string]
+                        if resultset["start_year"]:
+                            resultset["rule_nr"] = "3"
+                            resultset["rule_name"] = "Date: Day_Month_Year"
+                            break
+                        else:
+                            resultset["rule_nr"] = "4a"
+                            resultset["rule_name"] = "Date: Day_Month"
+                            break
+
+                #
+                # # ------OLD VERSION-----
+                #     resultset["start_day"] = sentence.words[k].string
+                #     # check if year exists in order to set rules correctly
+                #     if resultset["start_year"]:
+                #         resultset["rule_nr"] = "3"
+                #         resultset["rule_name"] = "Date: Day_Month_Year"
+                #     else:
+                #         resultset["rule_nr"] = "4a"
+                #         resultset["rule_name"] = "Date: Day_Month"
+                # elif sentence.words[k].string in definitions["days"].keys():
+                #     # date-normalization: 8th -> 8
+                #     resultset["start_day"] = definitions["days"][sentence.words[k].string]
+                #     if resultset["start_year"]:
+                #         resultset["rule_nr"] = "3"
+                #         resultset["rule_name"] = "Date: Day_Month_Year"
+                #     else:
+                #         resultset["rule_nr"] = "4a"
+                #         resultset["rule_name"] = "Date: Day_Month"
+                # ---------------------
 
             # -------------------------------------------------
             # 2. Check for a time-range and extract second date
@@ -160,7 +206,7 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 if resultset["rule_nr"] == "4":
                     resultset["rule_name"] = "Range: Month_to_Year"
                     resultset["rule_nr"] = "6d"
-                if resultset["rule_nr"] in ["3", "5"]:
+                if resultset["rule_nr"] == "3":
                     resultset["rule_name"] = "Range: Day_Month_Year_to_Year"
                     resultset["rule_nr"] = "6c"
                 if resultset["rule_nr"] == "2":
@@ -232,7 +278,10 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     if sentence.words[n].string in definitions["days"].values():
                         resultset["end_day"] = sentence.words[n].string
 
-                        #print resultset["rule_nr"]
+                        # print resultset["rule_nr"]
+                        if resultset["rule_nr"] == "5":
+                            resultset["rule_nr"] = "8f"
+                            resultset["rule_name"] = "Range: Day_to_Day_Month_Year"
                         if resultset["rule_nr"] == "7e":
                             resultset["rule_nr"] = "8e"
                             resultset["rule_name"] = "Range: Day_Month_to_Day_Month_Year"
@@ -251,6 +300,9 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     elif sentence.words[n].string in definitions["days"].keys():
                         # date-normalization: 8th -> 8
                         resultset["end_day"] = definitions["days"][sentence.words[n].string]
+                        if resultset["rule_nr"] == "5":
+                            resultset["rule_nr"] = "8f"
+                            resultset["rule_name"] = "Range: Day_to_Day_Month_Year"
                         if resultset["rule_nr"] == "7e":
                             resultset["rule_nr"] = "8e"
                             resultset["rule_name"] = "Range: Day_Month_to_Day_Month_Year"
