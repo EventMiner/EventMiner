@@ -231,13 +231,25 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     #   e.g. "12 Feb 2015", "30th of Feb 2015"
                     if sentence.words[n].string in definitions["days"].values():
                         resultset["end_day"] = sentence.words[n].string
-                        resultset["rule_nr"] = "8a"
-                        resultset["rule_name"] = "Range: Year_to_Day_Month_Year"
+
+                        #print resultset["rule_nr"]
+
+                        if resultset["rule_nr"] == "7b":
+                            resultset["rule_nr"] = "8b"
+                            resultset["rule_name"] = "Range: Month_Year_to_Day_Month_Year"
+                        if resultset["rule_nr"] == "7a":
+                            resultset["rule_nr"] = "8a"
+                            resultset["rule_name"] = "Range: Year_to_Day_Month_Year"
                     elif sentence.words[n].string in definitions["days"].keys():
                         # date-normalization: 8th -> 8
                         resultset["end_day"] = definitions["days"][sentence.words[n].string]
-                        resultset["rule_nr"] = "8a"
-                        resultset["rule_name"] = "Range: Year_to_Day_Month_Year"
+
+                        if resultset["rule_nr"] == "7b":
+                            resultset["rule_nr"] = "8b"
+                            resultset["rule_name"] = "Range: Month_Year_to_Day_Month_Year"
+                        if resultset["rule_nr"] == "7a":
+                            resultset["rule_nr"] = "8a"
+                            resultset["rule_name"] = "Range: Year_to_Day_Month_Year"
     except IndexError:
         pass
 
