@@ -156,9 +156,9 @@ class CsvAccuracy(object):
                 num_correct += 1
             else:
                 print
-                print "Error: "
+                print "Error: \"" + var_name + "\""
                 print "  Event:       #" + str(z)  # +1 the first line in csv are the row-descriptions
-                print "  Variable:    " + var_name
+                #print "  Variable:    " + var_name
                 print "  Goldmaster:  " + "\"" + str(x) + "\""
                 print "  Eventminer:  " + "\"" + str(y) + "\""
         return float(num_correct) / len(array_goldmaster)
