@@ -56,5 +56,8 @@ dic_definitions = {
     "keywords_time_span": ["and", "to", "until", "-", "through", "till"],
     "exclusion_tags": ["NNP-ORG"],
     "rules": {"1": "Date: Year",
-              "2": "Date: Year_Month"}
+              "2": "Date: Year_Month"},
+    "units": ["ft", "in", "mm", "cm", "m", "km", "yd", "mi", "lb", "oz", "mg", "g", "kg", "tsp", "t", "tbs", "tbsp",
+              "T", "c", "qt", "ml", "l", "pt", "gal", "F", "F", "C", "C", "cal", "Cal", "mph", "kph", "kn", "doz",
+              "L", "h", "kb", "mb", "gb", "tb", "KB", "MB", "GB", "TB", "%"]
 }

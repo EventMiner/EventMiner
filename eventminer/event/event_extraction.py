@@ -119,8 +119,12 @@ def extract_event(sentence, definitions, event_counter):
 
                 elif sentence.words[k].string in definitions["days"].keys():
                     # Exception: "between 25 and 29 January 1904"
-                    if sentence.words[k-2].string in definitions["days"].values():
-                        resultset["start_day"] = sentence.words[k-2].string
+                    if sentence.words[k-2].string in definitions["days"].values() \
+                            or sentence.words[k-2].string in definitions["days"].keys():
+                        if sentence.words[k-2].string in definitions["days"].values():
+                            resultset["start_day"] = sentence.words[k-2].string
+                        else:
+                            resultset["start_day"] = definitions["days"][sentence.words[k-2].string]
                         time_index = k-2
                         resultset["rule_nr"] = "5"
                         resultset["rule_name"] = "Date: Day"
@@ -280,8 +284,12 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
 
 def set_rules_for_day_range(resultset):
     if resultset["rule_nr"] == "5":
-        resultset["rule_nr"] = "8f"
-        resultset["rule_name"] = "Range: Day_to_Day_Month_Year"
+        if resultset["end_year"] == "":
+            resultset["rule_nr"] = "10c"
+            resultset["rule_name"] = "Range: Day_to_Day_Month"
+        else:
+            resultset["rule_nr"] = "8f"
+            resultset["rule_name"] = "Range: Day_to_Day_Month_Year"
         return resultset
     if resultset["rule_nr"] == "7e":
         resultset["rule_nr"] = "8e"
@@ -306,6 +314,9 @@ def set_rules_for_day_range(resultset):
     if resultset["rule_nr"] == "9a":
         resultset["rule_nr"] = "10a"
         resultset["rule_name"] = "Range: Month_to_Day_Month"
+    if resultset["rule_nr"] == "9b":
+        resultset["rule_nr"] = "10b"
+        resultset["rule_name"] = "Range: Day_Month_to_Day_Month"
         return resultset
 
 
