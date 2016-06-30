@@ -87,12 +87,17 @@ def extract_event(sentence, definitions, event_counter):
         # -------------------
         if resultset["event_found"]:
             for k in range(time_index+1, time_index-4, -1):
+
+                # Exception: comma after month "on July, 3rd ..."
+                if sentence.words[k].string == ",":
+                    k += 1
+
                 # - assumption: a day is always in the range of three positions before a month or a year,
                 #   e.g. "12 Feb 2015", "30th of Feb 2015"
                 # - or one position after a month, e.g. "August 29, 2012"
                 if sentence.words[k].string in definitions["days"].values():
 
-                    # Exception: "between 25 and 29 January 1904"
+                    # Exception: Only day as first date "between 25 and 29 January 1904"
                     if sentence.words[k-2].string in definitions["days"].values():
                         resultset["start_day"] = sentence.words[k-2].string
                         time_index = k-2
@@ -148,6 +153,11 @@ def extract_event(sentence, definitions, event_counter):
                 if sentence.words[time_index+2].string in definitions["keywords_time_span"]:
                     # e.g. "from January 6th till mid 1950"
                     time_index += 1
+                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                    return resultset
+                if sentence.words[time_index+3].string in definitions["keywords_time_span"]:
+                    # e.g. "from January, 6th till mid 1950"
+                    time_index += 2
                     detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
                     return resultset
             except IndexError:
@@ -238,6 +248,10 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 if resultset["rule_nr"] == "4":
                     resultset["rule_nr"] = "9a"
                     resultset["rule_name"] = "Range: Month_to_Month"
+
+                if resultset["rule_nr"] == "4a":
+                    resultset["rule_nr"] = "9b"
+                    resultset["rule_name"] = "Range: Day_Month_to_Month"
 
 
             # 3. Check for a day
