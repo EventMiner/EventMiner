@@ -258,19 +258,22 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
             # ------------------
             if time_index_2:
 
-                for n in range(time_index_2 - 1, time_index_2 - 4, -1):
+                for n in range(time_index_2+1, time_index_2 - 4, -1):
                     # Exception: "from January 6th till mid 1950"
                     if sentence.words[n].string in definitions["keywords_time_span"]:
                         break
                     # - assumption: a day is always in the range of three positions before a month or a year,
                     #   e.g. "12 Feb 2015", "30th of Feb 2015"
+                    # - sometimes, a day is referenced after the month... (therefore, the loop starts at time_index+2)
                     if sentence.words[n].string in definitions["days"].values():
                         resultset["end_day"] = sentence.words[n].string
                         set_rules_for_day_range(resultset)
+                        return resultset
                     elif sentence.words[n].string in definitions["days"].keys():
                         # date-normalization: 8th -> 8
                         resultset["end_day"] = definitions["days"][sentence.words[n].string]
                         set_rules_for_day_range(resultset)
+                        return resultset
     except IndexError:
         pass
 
@@ -279,21 +282,31 @@ def set_rules_for_day_range(resultset):
     if resultset["rule_nr"] == "5":
         resultset["rule_nr"] = "8f"
         resultset["rule_name"] = "Range: Day_to_Day_Month_Year"
+        return resultset
     if resultset["rule_nr"] == "7e":
         resultset["rule_nr"] = "8e"
         resultset["rule_name"] = "Range: Day_Month_to_Day_Month_Year"
+        return resultset
     if resultset["rule_nr"] == "7d":
         resultset["rule_nr"] = "8d"
         resultset["rule_name"] = "Range: Month_to_Day_Month_Year"
+        return resultset
     if resultset["rule_nr"] == "7c":
         resultset["rule_nr"] = "8c"
         resultset["rule_name"] = "Range: Day_Month_Year_to_Day_Month_Year"
+        return resultset
     if resultset["rule_nr"] == "7b":
         resultset["rule_nr"] = "8b"
         resultset["rule_name"] = "Range: Month_Year_to_Day_Month_Year"
+        return resultset
     if resultset["rule_nr"] == "7a":
         resultset["rule_nr"] = "8a"
         resultset["rule_name"] = "Range: Year_to_Day_Month_Year"
+        return resultset
+    if resultset["rule_nr"] == "9a":
+        resultset["rule_nr"] = "10a"
+        resultset["rule_name"] = "Range: Month_to_Day_Month"
+        return resultset
 
 
 def detect_time_range_without_keyword(definitions, resultset, sentence, time_index, time_index_2, i):
