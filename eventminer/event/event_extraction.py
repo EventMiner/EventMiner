@@ -55,7 +55,7 @@ def extract_event(sentence, definitions, event_counter):
 
         # 1.2 Check for month-only or month and year
         # ------------------------------------------
-        if sentence.words[i].string.lower() in definitions["months"].keys():
+        if sentence.words[i].string in definitions["months"].keys():
             # Try-block to avoid running into an IndexError when we reach the end of a sentence.
             # e.g. "In total, seven current FIFA officials were arrested at the Hotel Baur au Lac in Zuerich on May 27."
             try:
@@ -68,7 +68,7 @@ def extract_event(sentence, definitions, event_counter):
                                 and int(sentence.words[j].string) in definitions["year_range"]:
                             time_index = j
                             set_standard_result_variables(sentence, event_counter, resultset)
-                            resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+                            resultset["start_month"] = definitions["months"][sentence.words[i].string]
                             resultset["start_year"] = sentence.words[j].string
                             resultset["rule_nr"] = "2"
                             resultset["rule_name"] = "Date: Month_Year"
@@ -79,7 +79,7 @@ def extract_event(sentence, definitions, event_counter):
             if not resultset["rule_nr"] == "2":
                 time_index = i
                 set_standard_result_variables(sentence, event_counter, resultset)
-                resultset["start_month"] = definitions["months"][sentence.words[i].string.lower()]
+                resultset["start_month"] = definitions["months"][sentence.words[i].string]
                 resultset["rule_nr"] = "4"
                 resultset["rule_name"] = "Date: Month"
 
@@ -192,7 +192,6 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
             if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
                 resultset["end_year"] = sentence.words[l].string
                 # Setting of rule_numbers (according to previously set rule-numbers for a single date)
-
                 if resultset["rule_nr"] == "4a":
                     resultset["rule_name"] = "Range: Day_Month_to_Year"
                     resultset["rule_nr"] = "6e"
@@ -208,7 +207,7 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                 if resultset["rule_nr"] == "1":
                     resultset["rule_name"] = "Range: Year_to_Year"
                     resultset["rule_nr"] = "6a"
-                # set index fur further iteration
+                # set index for further iteration
                 time_index_2 = l
 
             # 2. Check for month-only or month and year
@@ -216,10 +215,10 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
 
             #  2.1 check for month
             #  -------------------
-            if sentence.words[l].string.lower() in definitions["months"].keys():
+            if sentence.words[l].string in definitions["months"].keys():
                 # set index for further analysis
                 time_index_2 = l
-                resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
+                resultset["end_month"] = definitions["months"][sentence.words[l].string]
 
                 # 2.2 check for year reference after month (e.g. "Feb 2015" or "Feb 3, 2015")
                 # ----------------------------------------
@@ -227,7 +226,7 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
                     for m in range(l + 1, l + 4, 1):
                         # check for month and year
                         if sentence.words[m].string.isdigit() and int(sentence.words[m].string) in definitions["year_range"]:
-                            # resultset["end_month"] = definitions["months"][sentence.words[l].string.lower()]
+                            # resultset["end_month"] = definitions["months"][sentence.words[l].string]
                             resultset["end_year"] = sentence.words[m].string
                             time_index_2 = m
                             if resultset["rule_nr"] == "4a":
