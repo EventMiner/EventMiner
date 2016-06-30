@@ -42,7 +42,8 @@ def extract_event(sentence, definitions, event_counter):
 
         # 1.1 Check for year-only
         # -----------------------
-        if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"]:
+        if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"] \
+                and sentence.words[i+1].string not in definitions["units"]:
             # Exclusion of exceptions ("The 2014 FIFA World Cup took place in Brazil from 12 June 2014 to 26 June 2014")
             if not sentence.words[i+1].tag in definitions["exclusion_tags"]:
                 # - assumption: a month always is referenced before a year, so when a year is found first, no
@@ -189,7 +190,8 @@ def detect_time_range_after_keyword(definitions, resultset, sentence, time_index
 
             # 1. Check for only end_year
             # --------------------------
-            if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"]:
+            if sentence.words[l].string.isdigit() and int(sentence.words[l].string) in definitions["year_range"] \
+                    and sentence.words[l+1].string not in definitions["units"]:
                 resultset["end_year"] = sentence.words[l].string
                 # Setting of rule_numbers (according to previously set rule-numbers for a single date)
                 if resultset["rule_nr"] == "4a":
