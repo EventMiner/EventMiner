@@ -13,7 +13,7 @@ def remove_references(text):
     cleaned_text = re.sub(str('\[\d{1,3}]'), "", text)
 
     # remove ; from text and replace them with a '.'
-    cleaned_text = re.sub(str(";"), ".", cleaned_text)
+    # cleaned_text = re.sub(str(";"), ".", cleaned_text)
 
     # remove " from text, because patterns algorithm causes trouble otherwise. If necessary, a different
     # workaround can be developed
