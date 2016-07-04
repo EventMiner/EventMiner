@@ -184,6 +184,10 @@ def extract_event(sentence, definitions, event_counter):
             except IndexError:
                 pass
 
+    # If no event was found, an empty resultset is returned
+    if not resultset["event_found"]:
+        return resultset
+
 
 def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i):
     """

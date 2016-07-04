@@ -92,6 +92,7 @@ class CsvAccuracy(object):
             e = Event()
             e.read_text(event)
             result_set = e.start_accuracy_extraction()
+            # print result_set["event"]
             self.event_text_eventminer.append(result_set["event"].encode("utf-8"))
             self.rule_nr_eventminer.append(result_set["rule_nr"])
             self.location_eventminer.append(result_set["location"])
@@ -145,10 +146,10 @@ class CsvAccuracy(object):
             - compare values within the goldmaster- and eventminer-arrays
         """
         if len(array_goldmaster) != len(array_eventminer):
-            # print array_goldmaster
-            # print "Anzahl Elemente Goldmaster-Array: " + str(len(array_goldmaster))
-            # print array_eventminer
-            # print "Anzahl Elemente EventMiner Array: " + str(len(array_eventminer))
+            print array_goldmaster
+            print "Anzahl Elemente Goldmaster-Array: " + str(len(array_goldmaster))
+            print array_eventminer
+            print "Anzahl Elemente EventMiner Array: " + str(len(array_eventminer))
             raise ValueError("Lists must have the same length.")
         num_correct = 0
         for x, y, z in zip(array_goldmaster, array_eventminer, array_event_number):
@@ -177,7 +178,7 @@ class CsvAccuracy(object):
         print
         print "EventMiner Accuracy"
         print "  Event Accuracy:            ", str(round(self.event_accuracy() * 100, 2)), '%'
-        print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
+        # print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
         print "  Location Accuracy:         ", str(round(self.location_accuracy() * 100, 2)), '%'
         print "  Start Day Accuracy:        ", str(round(self.start_day_accuracy() * 100, 2)), '%'
         print "  Start Month Accuracy:      ", str(round(self.start_month_accuracy() * 100, 2)), '%'
