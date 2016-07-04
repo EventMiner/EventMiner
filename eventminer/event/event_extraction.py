@@ -42,17 +42,20 @@ def extract_event(sentence, definitions, event_counter):
 
         # 1.1 Check for year-only
         # -----------------------
-        if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"] \
-                and sentence.words[i+1].string not in definitions["units"]:
-            # Exclusion of exceptions ("The 2014 FIFA World Cup took place in Brazil from 12 June 2014 to 26 June 2014")
-            if not sentence.words[i+1].tag in definitions["exclusion_tags"]:
-                # - assumption: a month always is referenced before a year, so when a year is found first, no
-                #   month was mentioned
-                time_index = i
-                set_standard_result_variables(sentence, event_counter, resultset)
-                resultset["start_year"] = sentence.words[i].string
-                resultset["rule_nr"] = "1"
-                resultset["rule_name"] = "Date: Year"
+        try:
+            if sentence.words[i].string.isdigit() and int(sentence.words[i].string) in definitions["year_range"] \
+                    and sentence.words[i+1].string not in definitions["units"]:
+                # Exclusion of exceptions ("The 2014 FIFA World Cup took place in Brazil from 12 June 2014 to 26 June 2014")
+                if not sentence.words[i+1].tag in definitions["exclusion_tags"]:
+                    # - assumption: a month always is referenced before a year, so when a year is found first, no
+                    #   month was mentioned
+                    time_index = i
+                    set_standard_result_variables(sentence, event_counter, resultset)
+                    resultset["start_year"] = sentence.words[i].string
+                    resultset["rule_nr"] = "1"
+                    resultset["rule_name"] = "Date: Year"
+        except IndexError:
+            pass
 
         # 1.2 Check for month-only or month and year
         # ------------------------------------------
@@ -87,96 +90,99 @@ def extract_event(sentence, definitions, event_counter):
         # 1.3 Check for a day
         # -------------------
         if resultset["event_found"]:
-            for k in range(time_index+1, time_index-4, -1):
+            try:
+                for k in range(time_index+1, time_index-4, -1):
+                    # Exception: comma after month "on July, 3rd ..."
+                    if sentence.words[k].string == ",":
+                        k += 1
 
-                # Exception: comma after month "on July, 3rd ..."
-                if sentence.words[k].string == ",":
-                    k += 1
+                    # - assumption: a day is always in the range of three positions before a month or a year,
+                    #   e.g. "12 Feb 2015", "30th of Feb 2015"
+                    # - or one position after a month, e.g. "August 29, 2012"
+                    if sentence.words[k].string in definitions["days"].values():
 
-                # - assumption: a day is always in the range of three positions before a month or a year,
-                #   e.g. "12 Feb 2015", "30th of Feb 2015"
-                # - or one position after a month, e.g. "August 29, 2012"
-                if sentence.words[k].string in definitions["days"].values():
-
-                    # Exception: Only day as first date "between 25 and 29 January 1904"
-                    if sentence.words[k-2].string in definitions["days"].values():
-                        resultset["start_day"] = sentence.words[k-2].string
-                        time_index = k-2
-                        resultset["rule_nr"] = "5"
-                        resultset["rule_name"] = "Date: Day"
-                        resultset["start_month"] = ""
-                        resultset["start_year"] = ""
-                        break
-                    else:
-                        resultset["start_day"] = sentence.words[k].string
-                        if resultset["start_year"]:
-                            resultset["rule_nr"] = "3"
-                            resultset["rule_name"] = "Date: Day_Month_Year"
-                            break
-                        else:
-                            resultset["rule_nr"] = "4a"
-                            resultset["rule_name"] = "Date: Day_Month"
-                            break
-
-                elif sentence.words[k].string in definitions["days"].keys():
-                    # Exception: "between 25 and 29 January 1904"
-                    if sentence.words[k-2].string in definitions["days"].values() \
-                            or sentence.words[k-2].string in definitions["days"].keys():
+                        # Exception: Only day as first date "between 25 and 29 January 1904"
                         if sentence.words[k-2].string in definitions["days"].values():
                             resultset["start_day"] = sentence.words[k-2].string
-                        else:
-                            resultset["start_day"] = definitions["days"][sentence.words[k-2].string]
-                        time_index = k-2
-                        resultset["rule_nr"] = "5"
-                        resultset["rule_name"] = "Date: Day"
-                        resultset["start_month"] = ""
-                        resultset["start_year"] = ""
-                        break
-                    else:
-                        # date-normalization: 8th -> 8
-                        resultset["start_day"] = definitions["days"][sentence.words[k].string]
-                        if resultset["start_year"]:
-                            resultset["rule_nr"] = "3"
-                            resultset["rule_name"] = "Date: Day_Month_Year"
+                            time_index = k-2
+                            resultset["rule_nr"] = "5"
+                            resultset["rule_name"] = "Date: Day"
+                            resultset["start_month"] = ""
+                            resultset["start_year"] = ""
                             break
                         else:
-                            resultset["rule_nr"] = "4a"
-                            resultset["rule_name"] = "Date: Day_Month"
-                            break
+                            resultset["start_day"] = sentence.words[k].string
+                            if resultset["start_year"]:
+                                resultset["rule_nr"] = "3"
+                                resultset["rule_name"] = "Date: Day_Month_Year"
+                                break
+                            else:
+                                resultset["rule_nr"] = "4a"
+                                resultset["rule_name"] = "Date: Day_Month"
+                                break
 
-            # -------------------------------------------------
-            # 2. Check for a time-range and extract second date
-            # -------------------------------------------------
-            
-            # 2.1 Check for time-range directly after a keyword
-            # -------------------------------------------------
-            if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
-                detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                    elif sentence.words[k].string in definitions["days"].keys():
+                        # Exception: "between 25 and 29 January 1904"
+                        if sentence.words[k-2].string in definitions["days"].values() \
+                                or sentence.words[k-2].string in definitions["days"].keys():
+                            if sentence.words[k-2].string in definitions["days"].values():
+                                resultset["start_day"] = sentence.words[k-2].string
+                            else:
+                                resultset["start_day"] = definitions["days"][sentence.words[k-2].string]
+                            time_index = k-2
+                            resultset["rule_nr"] = "5"
+                            resultset["rule_name"] = "Date: Day"
+                            resultset["start_month"] = ""
+                            resultset["start_year"] = ""
+                            break
+                        else:
+                            # date-normalization: 8th -> 8
+                            resultset["start_day"] = definitions["days"][sentence.words[k].string]
+                            if resultset["start_year"]:
+                                resultset["rule_nr"] = "3"
+                                resultset["rule_name"] = "Date: Day_Month_Year"
+                                break
+                            else:
+                                resultset["rule_nr"] = "4a"
+                                resultset["rule_name"] = "Date: Day_Month"
+                                break
+
+                # -------------------------------------------------
+                # 2. Check for a time-range and extract second date
+                # -------------------------------------------------
+
+                # 2.1 Check for time-range directly after a keyword
+                # -------------------------------------------------
+                if sentence.words[time_index+1].string in definitions["keywords_time_span"]:
+                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                    return resultset
+
+                try:
+                    if sentence.words[time_index+2].string in definitions["keywords_time_span"]:
+                        # e.g. "from January 6th till mid 1950"
+                        time_index += 1
+                        detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                        return resultset
+                    if sentence.words[time_index+3].string in definitions["keywords_time_span"]:
+                        # e.g. "from January, 6th till mid 1950"
+                        time_index += 2
+                        detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                        return resultset
+                except IndexError:
+                    pass
+
+                # 2.2 Check for time-range when there was no keyword
+                # --------------------------------------------------
+                #else:
+                detect_time_range_without_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
+                    # if no keyword for a time-range was detected
+                    # call a function that searches the sentence through the end
+                    # for m in range(time_index+1, len(sentence.words), 1):
+                    #     print sentence.words[m].string
                 return resultset
 
-            try:
-                if sentence.words[time_index+2].string in definitions["keywords_time_span"]:
-                    # e.g. "from January 6th till mid 1950"
-                    time_index += 1
-                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
-                    return resultset
-                if sentence.words[time_index+3].string in definitions["keywords_time_span"]:
-                    # e.g. "from January, 6th till mid 1950"
-                    time_index += 2
-                    detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
-                    return resultset
             except IndexError:
                 pass
-
-            # 2.2 Check for time-range when there was no keyword
-            # --------------------------------------------------
-            #else:
-            detect_time_range_without_keyword(definitions, resultset, sentence, time_index, time_index_2, i)
-                # if no keyword for a time-range was detected
-                # call a function that searches the sentence through the end
-                # for m in range(time_index+1, len(sentence.words), 1):
-                #     print sentence.words[m].string
-            return resultset
 
 
 def detect_time_range_after_keyword(definitions, resultset, sentence, time_index, time_index_2, i):
