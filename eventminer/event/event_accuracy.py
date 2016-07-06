@@ -92,6 +92,7 @@ class CsvAccuracy(object):
             e = Event()
             e.read_text(event)
             result_set = e.start_accuracy_extraction()
+            # print result_set["event"]
             self.event_text_eventminer.append(result_set["event"].encode("utf-8"))
             self.rule_nr_eventminer.append(result_set["rule_nr"])
             self.location_eventminer.append(result_set["location"])
@@ -154,13 +155,13 @@ class CsvAccuracy(object):
         for x, y, z in zip(array_goldmaster, array_eventminer, array_event_number):
             if str(x) == str(y):
                 num_correct += 1
-            else:
-                print
-                print "Error: \"" + var_name + "\""
-                print "  Event:       #" + str(z)  # +1 the first line in csv are the row-descriptions
-                #print "  Variable:    " + var_name
-                print "  Goldmaster:  " + "\"" + str(x) + "\""
-                print "  Eventminer:  " + "\"" + str(y) + "\""
+            # else:
+            #     print
+            #     print "Error: \"" + var_name + "\""
+            #     print "  Event:       #" + str(z)  # +1 the first line in csv are the row-descriptions
+            #     #print "  Variable:    " + var_name
+            #     print "  Goldmaster:  " + "\"" + str(x) + "\""
+            #     print "  Eventminer:  " + "\"" + str(y) + "\""
         return float(num_correct) / len(array_goldmaster)
 
     def accuracy_report(self):
@@ -177,24 +178,12 @@ class CsvAccuracy(object):
         print
         print "EventMiner Accuracy"
         print "  Event Accuracy:            ", str(round(self.event_accuracy() * 100, 2)), '%'
-        print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
-        print "  Location Accuracy:         ", str(round(self.location_accuracy() * 100, 2)), '%'
-        print "  Start Day Accuracy:        ", str(round(self.start_day_accuracy() * 100, 2)), '%'
-        print "  Start Month Accuracy:      ", str(round(self.start_month_accuracy() * 100, 2)), '%'
-        print "  Start Year Accuracy:       ", str(round(self.start_year_accuracy() * 100, 2)), '%'
-        print "  End Day Accuracy:          ", str(round(self.end_day_accuracy() * 100, 2)), '%'
-        print "  End Month Accuracy:        ", str(round(self.end_month_accuracy() * 100, 2)), '%'
-        print "  End Year Accuracy:         ", str(round(self.end_year_accuracy() * 100, 2)), '%'
-
-        result = {"Event Accuracy": (str(round(self.event_accuracy() * 100, 2))),
-                "Rule Accuracy" : (str(round(self.rule_accuracy() * 100, 2))),
-                "Location Accuracy": (str(round(self.location_accuracy() * 100, 2))),
-                "Start Day Accuracy": (str(round(self.start_day_accuracy() * 100, 2))),
-                "Start Month Accuracy": (str(round(self.start_month_accuracy() * 100, 2))),
-                "Start Year Accuracy": (str(round(self.start_year_accuracy() * 100, 2))),
-                "End Day Accuracy": (str(round(self.end_day_accuracy() * 100, 2))),
-                "End Month Accuracy": (str(round(self.end_month_accuracy() * 100, 2))),
-                "End Year Accuracy": (str(round(self.end_year_accuracy() * 100, 2)))
-                }
-
-        return result
+        # print "  Rule Accuracy:             ", str(round(self.rule_accuracy() * 100, 2)), '%'
+        # print "  Location Accuracy:         ", str(round(self.location_accuracy() * 100, 2)), '%'
+        print "  Start Day Accuracy:        ", str(round(self.start_day_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.start_day_eventminer)), ")"
+        print "  Start Month Accuracy:      ", str(round(self.start_month_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.start_month_eventminer)), ")"
+        print "  Start Year Accuracy:       ", str(round(self.start_year_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.start_year_eventminer)), ")"
+        print "  End Day Accuracy:          ", str(round(self.end_day_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_day_eventminer)), ")"
+        print "  End Month Accuracy:        ", str(round(self.end_month_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_month_eventminer)), ")"
+        print "  End Year Accuracy:         ", str(round(self.end_year_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_year_eventminer)), ")"
+    
