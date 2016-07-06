@@ -2,7 +2,6 @@
 
 from flask import Flask, jsonify, render_template, request
 import run_accuracy, run_extraction
-import requests
 import urllib2
 
 # Create the application
@@ -13,7 +12,11 @@ def accuracy():
     result = run_accuracy.test_start_accuracy()
     return jsonify(accuracy_result=result)
 
-@app.route('/extraction', methods=['GET', 'POST'])
+@app.route('/extraction', methods=['GET'])
+def hello_world():
+    return 'Hello! Welcome to event extraction!'
+
+@app.route('/extraction', methods=['POST'])
 def extraction():
     wiki_text = request.json['text']
     wiki_text = urllib2.unquote(wiki_text)
