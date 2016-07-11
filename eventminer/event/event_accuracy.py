@@ -186,3 +186,4 @@ class CsvAccuracy(object):
         print "  End Day Accuracy:          ", str(round(self.end_day_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_day_eventminer)), ")"
         print "  End Month Accuracy:        ", str(round(self.end_month_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_month_eventminer)), ")"
         print "  End Year Accuracy:         ", str(round(self.end_year_accuracy() * 100, 2)), '%', "  (retrieved items:", sum(map(bool, self.end_year_eventminer)), ")"
+    

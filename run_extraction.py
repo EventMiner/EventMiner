@@ -26,6 +26,14 @@ def test_remove_references():
 def test_start_extraction():
     e = Event()
     e.read_file("test/test_articles/random_test.txt")
+    e.text = remove_references(e.text)
     e.start_extraction()
+
+
+def flask_start_extraction(wiki_text):
+    e = Event()
+    e.text = wiki_text
+    e.text = remove_references(e.text)
+    return e.start_extraction()
 
 test_start_extraction()
